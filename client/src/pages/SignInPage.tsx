@@ -1,11 +1,10 @@
-import React, { ChangeEvent, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import { Box, Typography, Link, Checkbox, FormControlLabel, TextField } from '@material-ui/core';
+import { Box, Typography, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import randomImg from '../assets/randomImg';
 import { emailErrorText, validateEmail, PasswordEmptyText } from '../utils/validation';
-import { Simulate } from 'react-dom/test-utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
