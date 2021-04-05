@@ -1,119 +1,126 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
+import React, { ChangeEvent, useMemo, useState } from 'react';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
+import { Box, Typography, Link, Checkbox, FormControlLabel, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import randomImg from '../assets/randomImg';
+import { emailErrorText, validateEmail, PasswordEmptyText } from '../utils/validation';
+import { Simulate } from 'react-dom/test-utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
   },
   image: {
-    backgroundImage: 'url(https://source.unsplash.com/random)',
     backgroundRepeat: 'no-repeat',
     backgroundColor: theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   },
-  paper: {
-    margin: theme.spacing(8, 4),
+  box: {
+    margin: theme.spacing(8, 0),
+    [theme.breakpoints.up('xs')]: {
+      margin: theme.spacing(8, 4),
+    },
+    [theme.breakpoints.up('sm')]: {
+      margin: theme.spacing(8, 4),
+    },
+    [theme.breakpoints.up('md')]: {
+      margin: theme.spacing(8, 6),
+    },
+    [theme.breakpoints.up('lg')]: {
+      margin: theme.spacing(8, 8),
+    },
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%',
     marginTop: theme.spacing(1),
   },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
+  button: {
+    marginTop: '20px',
   },
 }));
 
 const SignInSide: React.FC = () => {
   const classes = useStyles();
+  const [randomImgUrl, setRandomImgUrl] = useState('');
+  if (randomImgUrl === '') setRandomImgUrl(randomImg());
+  const [email, setEmail] = useState({ value: '', error: false, helperText: '' });
+  const [password, setPassword] = useState({ value: '', error: false, helperText: '' });
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    if (email.value === '') setEmail({ ...email, error: true, helperText: emailErrorText });
+    if (password.value === '') setPassword({ ...password, error: true, helperText: PasswordEmptyText });
+    if (email.error || password.error) return;
+    console.log(email, password);
+  };
+
+  const handleEmailOnchange = (e: any) => {
+    const inputEmail = e.target.value;
+    if (validateEmail(inputEmail)) setEmail({ value: inputEmail, error: false, helperText: '' });
+    else setEmail({ value: inputEmail, error: true, helperText: emailErrorText });
+  };
+
+  const handlePasswordOnchange = (e: any) => {
+    const inputPassword = e.target.value;
+    if (inputPassword === '') setPassword({ ...password, error: true, helperText: PasswordEmptyText });
+    else setPassword({ value: inputPassword, error: false, helperText: '' });
+  };
 
   return (
     <Grid container component="main" className={classes.root}>
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
+      <Grid item xs={12} sm={8} md={6} lg={4}>
+        <Box className={classes.box}>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate method="post" onSubmit={handleSubmit}>
             <TextField
               variant="outlined"
               margin="normal"
-              required
               fullWidth
-              id="email"
               label="Email Address"
               name="email"
-              autoComplete="email"
               autoFocus
+              value={email.value}
+              error={email.error}
+              helperText={email.helperText}
+              onChange={handleEmailOnchange}
             />
             <TextField
               variant="outlined"
               margin="normal"
-              required
               fullWidth
               name="password"
               label="Password"
               type="password"
-              id="password"
-              autoComplete="current-password"
+              value={password.value}
+              error={password.error}
+              helperText={password.helperText}
+              onChange={handlePasswordOnchange}
             />
-            <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
-            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+            <Button type="submit" fullWidth variant="contained" size="large" color="primary" className={classes.button}>
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-            <Box mt={5}>
-              <Copyright />
-            </Box>
+            <Button fullWidth variant="contained" size="large" color="primary" className={`${classes.button} btn-grey`}>
+              Sign Up
+            </Button>
           </form>
-        </div>
+        </Box>
       </Grid>
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
+      <Grid
+        item
+        xs={false}
+        sm={4}
+        md={6}
+        lg={8}
+        className={classes.image}
+        style={{ backgroundImage: `url(${randomImgUrl})` }}
+      />
     </Grid>
   );
 };

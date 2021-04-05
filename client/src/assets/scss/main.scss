@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Staatliches&display=swap');
 @import "variables";
 @import "media-queries";
+@import "./button";
 
 * {
   margin: 0;
@@ -12,4 +13,6 @@
     font-weight: normal;
   }
 }
+
+input:-webkit-autofill { box-shadow: 0 0 0 1000px #222222 inset !important;}
 

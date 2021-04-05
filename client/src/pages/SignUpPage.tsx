@@ -11,19 +11,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import randomImg from '../assets/randomImg';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -40,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
-  submit: {
+  signIn: {
     margin: theme.spacing(3, 0, 2),
   },
 }));
@@ -112,7 +100,7 @@ export default function SignUpPage() {
               />
             </Grid>
           </Grid>
-          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+          <Button type="submit" fullWidth variant="contained" className={classes.signIn}>
             Sign Up
           </Button>
           <Grid container justify="flex-end">
@@ -124,9 +112,6 @@ export default function SignUpPage() {
           </Grid>
         </form>
       </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }
