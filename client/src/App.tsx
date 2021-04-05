@@ -1,12 +1,15 @@
 import React from 'react';
-import MainNav from './components/MainNav/MainNav';
-import HomePage from './pages/HomePage/HomePage';
+import MainNav from './components/MainNav';
+import HomePage from './pages/HomePage';
+import SignInPage from './pages/SignInPage';
+import SignUpPage from './pages/SignUpPage';
 
 const App: React.FC = () => {
   return (
     <>
-      <MainNav />
-      <HomePage />
+      {/*<MainNav />*/}
+      {/*<HomePage />*/}
+      <SignInPage />
     </>
   );
 };
