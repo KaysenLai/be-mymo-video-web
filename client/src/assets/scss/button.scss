@@ -1,6 +1,12 @@
 .btn-grey.MuiButton-root {
   background-color: #373737;
+  color: #d6d6d6;
+  transition: all .2s ease;
+  //font-weight: normal;
+  font-size: 16px;
+  text-transform: unset;
   &:hover {
+	color: #efefef;
 	background-color: #404040;
   }
 }

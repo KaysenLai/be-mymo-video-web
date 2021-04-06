@@ -16,43 +16,6 @@ import {
 } from '../utils/validation';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: '100vh',
-  },
-  image: {
-    backgroundRepeat: 'no-repeat',
-    backgroundColor: theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  },
-  box: {
-    margin: theme.spacing(4, 0),
-    [theme.breakpoints.up('xs')]: {
-      margin: theme.spacing(4, 4),
-    },
-    [theme.breakpoints.up('sm')]: {
-      margin: theme.spacing(4, 4),
-    },
-    [theme.breakpoints.up('md')]: {
-      margin: theme.spacing(4, 6),
-    },
-    [theme.breakpoints.up('lg')]: {
-      margin: theme.spacing(4, 8),
-    },
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  form: {
-    width: '100%',
-    marginTop: theme.spacing(2),
-  },
-  button: {
-    marginTop: '20px',
-  },
-}));
-
 const SignUpPage: React.FC = () => {
   const classes = useStyles();
   const [randomImgUrl, setRandomImgUrl] = useState('');
@@ -69,14 +32,15 @@ const SignUpPage: React.FC = () => {
   const showIcon = <Visibility style={{ color: '#BCBCBC' }} />;
   const hideIcon = <VisibilityOff style={{ color: '#BCBCBC' }} />;
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
     if (fName.value === '') setFName({ ...fName, error: true, helperText: fNameEmptyText });
     if (lName.value === '') setLName({ ...lName, error: true, helperText: lNameEmptyText });
     if (email.value === '') setEmail({ ...email, error: true, helperText: emailErrorText });
     if (password.value === '') setPassword({ ...password, error: true, helperText: passwordEmptyText });
     if (confirm.value === '') setConfirm({ ...confirm, error: true, helperText: confirmEmptyText });
-    setTimeout(() => {
+
+    const callback = () => {
       if (fName.error || lName.error || email.error || password.error || confirm.error) return;
       const formData = {
         fName: fName.value,
@@ -85,28 +49,29 @@ const SignUpPage: React.FC = () => {
         password: password.value,
       };
       console.log(formData);
-    }, 200);
+    };
+    setTimeout(callback, 200);
   };
 
-  const handleFNameOnchange = (e: any) => {
+  const handleFNameOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputFName = e.target.value;
     if (inputFName === '') setFName({ value: inputFName, error: true, helperText: fNameEmptyText });
     else setFName({ value: inputFName, error: false, helperText: '' });
   };
 
-  const handleLNameOnchange = (e: any) => {
+  const handleLNameOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputLName = e.target.value;
     if (inputLName === '') setLName({ value: inputLName, error: true, helperText: lNameEmptyText });
     else setLName({ value: inputLName, error: false, helperText: '' });
   };
 
-  const handleEmailOnchange = (e: any) => {
+  const handleEmailOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputEmail = e.target.value;
     if (validateEmail(inputEmail)) setEmail({ value: inputEmail, error: false, helperText: '' });
     else setEmail({ value: inputEmail, error: true, helperText: emailErrorText });
   };
 
-  const handlePasswordOnchange = (e: any) => {
+  const handlePasswordOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputPassword = e.target.value;
     if (inputPassword === '') {
       setPassword({ value: inputPassword, error: true, helperText: passwordEmptyText });
@@ -118,7 +83,7 @@ const SignUpPage: React.FC = () => {
     } else setPassword({ value: inputPassword, error: false, helperText: '' });
   };
 
-  const handleConfirmOnchange = (e: any) => {
+  const handleConfirmOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputConfirm = e.target.value;
     if (inputConfirm === '') {
       setConfirm({ value: inputConfirm, error: true, helperText: confirmEmptyText });
@@ -144,7 +109,7 @@ const SignUpPage: React.FC = () => {
     setShowConfirm(!showConfirm);
   };
 
-  const handleMouseDownPassword = (e: any) => {
+  const handleMouseDownPassword = (e: React.MouseEvent) => {
     e.preventDefault();
   };
 
@@ -272,3 +237,40 @@ const SignUpPage: React.FC = () => {
 };
 
 export default SignUpPage;
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: '100vh',
+  },
+  image: {
+    backgroundRepeat: 'no-repeat',
+    backgroundColor: theme.palette.background.default,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
+  box: {
+    margin: theme.spacing(4, 0),
+    [theme.breakpoints.up('xs')]: {
+      margin: theme.spacing(4, 4),
+    },
+    [theme.breakpoints.up('sm')]: {
+      margin: theme.spacing(4, 4),
+    },
+    [theme.breakpoints.up('md')]: {
+      margin: theme.spacing(4, 6),
+    },
+    [theme.breakpoints.up('lg')]: {
+      margin: theme.spacing(4, 8),
+    },
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  form: {
+    width: '100%',
+    marginTop: theme.spacing(2),
+  },
+  button: {
+    marginTop: '20px',
+  },
+}));

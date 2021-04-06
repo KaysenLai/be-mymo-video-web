@@ -3,13 +3,17 @@ import MainNav from './components/MainNav';
 import HomePage from './pages/HomePage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
+import { Switch, Route } from 'react-router-dom';
 
 const App: React.FC = () => {
   return (
     <>
       {/*<MainNav />*/}
       {/*<HomePage />*/}
-      <SignUpPage />
+
+      <Route exact path="/signin" component={SignInPage} />
+
+      {/*<SignUpPage />*/}
     </>
   );
 };

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import { Box, Typography, TextField } from '@material-ui/core';
+import { Box, Typography, TextField, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import randomImg from '../assets/randomImg';
 import { emailErrorText, validateEmail, passwordEmptyText } from '../utils/validation';
+import { GoogleOutlined } from '@ant-design/icons';
+import { GoogleLogin } from 'react-google-login';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +43,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginTop: '20px',
   },
+  divider: {
+    width: '100%',
+    marginTop: '20px',
+  },
 }));
 
 const SignInPage: React.FC = () => {
@@ -54,8 +60,16 @@ const SignInPage: React.FC = () => {
     e.preventDefault();
     if (email.value === '') setEmail({ ...email, error: true, helperText: emailErrorText });
     if (password.value === '') setPassword({ ...password, error: true, helperText: passwordEmptyText });
-    if (email.error || password.error) return;
-    console.log(email, password);
+
+    const callback = () => {
+      if (email.error || password.error) return;
+      const formData = {
+        email: email.value,
+        password: password.value,
+      };
+      console.log(formData);
+    };
+    setTimeout(callback, 200);
   };
 
   const handleEmailOnchange = (e: any) => {
@@ -70,6 +84,20 @@ const SignInPage: React.FC = () => {
       setPassword({ value: inputPassword, error: true, helperText: passwordEmptyText });
     }
     setPassword({ value: inputPassword, error: false, helperText: '' });
+  };
+
+  const handleGoogleSuccess = async (res: any) => {
+    console.log(res);
+    const result: object = res?.profileObj;
+    const token: string = res?.tokenId;
+    // localStorage.setItem('profile', JSON.stringify({ result, token }));
+    // const user = JSON.parse(localStorage.getItem('profile') as string);
+    // when log out, localStorage.clear();
+  };
+
+  const handleGoogleFailure = (error: any) => {
+    console.log(error);
+    console.log('Google sign in was fail');
   };
 
   return (
@@ -107,10 +135,32 @@ const SignInPage: React.FC = () => {
             <Button type="submit" fullWidth variant="contained" size="large" color="primary" className={classes.button}>
               Sign In
             </Button>
-            <Button fullWidth variant="contained" size="large" color="primary" className={`${classes.button} btn-grey`}>
-              Sign Up
-            </Button>
           </form>
+          <Divider variant="middle" className={classes.divider} />
+          <GoogleLogin
+            clientId="461763116622-f6rghot464nbe6em99pv2flmf3hrkcj5.apps.googleusercontent.com"
+            render={(renderProps) => (
+              <Button
+                fullWidth
+                variant="contained"
+                size="large"
+                color="primary"
+                className={`${classes.button} btn-grey`}
+                startIcon={<GoogleOutlined />}
+                onClick={renderProps.onClick}
+                disabled={renderProps.disabled}
+              >
+                Sign In with Google
+              </Button>
+            )}
+            onSuccess={handleGoogleSuccess}
+            onFailure={handleGoogleFailure}
+            cookiePolicy="single_host_origin"
+          />
+
+          <Button fullWidth variant="contained" size="large" color="primary" className={`${classes.button} btn-grey`}>
+            Create an account
+          </Button>
         </Box>
       </Grid>
       <Grid
