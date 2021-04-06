@@ -1,53 +1,15 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import { Box, Typography, TextField, Divider } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Divider from '@material-ui/core/Divider';
 import { makeStyles } from '@material-ui/core/styles';
 import randomImg from '../assets/randomImg';
 import { emailErrorText, validateEmail, passwordEmptyText } from '../utils/validation';
 import { GoogleOutlined } from '@ant-design/icons';
 import { GoogleLogin } from 'react-google-login';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: '100vh',
-  },
-  image: {
-    backgroundRepeat: 'no-repeat',
-    backgroundColor: theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  },
-  box: {
-    margin: theme.spacing(8, 0),
-    [theme.breakpoints.up('xs')]: {
-      margin: theme.spacing(8, 4),
-    },
-    [theme.breakpoints.up('sm')]: {
-      margin: theme.spacing(8, 4),
-    },
-    [theme.breakpoints.up('md')]: {
-      margin: theme.spacing(8, 6),
-    },
-    [theme.breakpoints.up('lg')]: {
-      margin: theme.spacing(8, 8),
-    },
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  form: {
-    width: '100%',
-    marginTop: theme.spacing(1),
-  },
-  button: {
-    marginTop: '20px',
-  },
-  divider: {
-    width: '100%',
-    marginTop: '20px',
-  },
-}));
 
 const SignInPage: React.FC = () => {
   const classes = useStyles();
@@ -177,3 +139,44 @@ const SignInPage: React.FC = () => {
 };
 
 export default SignInPage;
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: '100vh',
+  },
+  image: {
+    backgroundRepeat: 'no-repeat',
+    backgroundColor: theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
+  box: {
+    margin: theme.spacing(8, 0),
+    [theme.breakpoints.up('xs')]: {
+      margin: theme.spacing(8, 4),
+    },
+    [theme.breakpoints.up('sm')]: {
+      margin: theme.spacing(8, 4),
+    },
+    [theme.breakpoints.up('md')]: {
+      margin: theme.spacing(8, 6),
+    },
+    [theme.breakpoints.up('lg')]: {
+      margin: theme.spacing(8, 8),
+    },
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  form: {
+    width: '100%',
+    marginTop: theme.spacing(1),
+  },
+  button: {
+    marginTop: '20px',
+  },
+  divider: {
+    width: '100%',
+    marginTop: '20px',
+  },
+}));
