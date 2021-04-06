@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import { Box, Typography, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import randomImg from '../assets/randomImg';
-import { emailErrorText, validateEmail, PasswordEmptyText } from '../utils/validation';
+import { emailErrorText, validateEmail, passwordEmptyText } from '../utils/validation';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignInSide: React.FC = () => {
+const SignInPage: React.FC = () => {
   const classes = useStyles();
   const [randomImgUrl, setRandomImgUrl] = useState('');
   if (randomImgUrl === '') setRandomImgUrl(randomImg());
@@ -53,7 +53,7 @@ const SignInSide: React.FC = () => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     if (email.value === '') setEmail({ ...email, error: true, helperText: emailErrorText });
-    if (password.value === '') setPassword({ ...password, error: true, helperText: PasswordEmptyText });
+    if (password.value === '') setPassword({ ...password, error: true, helperText: passwordEmptyText });
     if (email.error || password.error) return;
     console.log(email, password);
   };
@@ -66,8 +66,10 @@ const SignInSide: React.FC = () => {
 
   const handlePasswordOnchange = (e: any) => {
     const inputPassword = e.target.value;
-    if (inputPassword === '') setPassword({ ...password, error: true, helperText: PasswordEmptyText });
-    else setPassword({ value: inputPassword, error: false, helperText: '' });
+    if (inputPassword === '') {
+      setPassword({ value: inputPassword, error: true, helperText: passwordEmptyText });
+    }
+    setPassword({ value: inputPassword, error: false, helperText: '' });
   };
 
   return (
@@ -124,4 +126,4 @@ const SignInSide: React.FC = () => {
   );
 };
 
-export default SignInSide;
+export default SignInPage;

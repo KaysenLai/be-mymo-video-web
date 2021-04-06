@@ -9,7 +9,7 @@ const App: React.FC = () => {
     <>
       {/*<MainNav />*/}
       {/*<HomePage />*/}
-      <SignInPage />
+      <SignUpPage />
     </>
   );
 };

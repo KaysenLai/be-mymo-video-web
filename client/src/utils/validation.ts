@@ -4,7 +4,23 @@ const validateEmail = (email: string) => {
   return re.test(String(email).toLowerCase());
 };
 
-const emailErrorText = 'Please enter a valid email.';
-const PasswordEmptyText = 'Please enter your password.';
+const fNameEmptyText = 'First name is empty.';
+const lNameEmptyText = 'Last name is empty.';
 
-export { validateEmail, emailErrorText, PasswordEmptyText };
+const emailErrorText = 'Please enter a valid email.';
+
+const passwordEmptyText = 'Please enter your password.';
+const confirmEmptyText = 'Please confirm your password.';
+const diffPasswordText = 'The two passwords that you entered do not match!';
+const passwordLengthErrorText = 'Your password must be between 8 and 30 characters.';
+
+export {
+  validateEmail,
+  emailErrorText,
+  passwordEmptyText,
+  fNameEmptyText,
+  lNameEmptyText,
+  confirmEmptyText,
+  diffPasswordText,
+  passwordLengthErrorText,
+};
