@@ -4,7 +4,6 @@ import Grid from '@material-ui/core/Grid';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import randomImg from '../assets/randomImg';
@@ -19,6 +18,8 @@ import {
   passwordLengthErrorText,
 } from '../utils/validation';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
+import logo from '../assets/img/MYMO_logo.svg';
 
 const SignUpPage: React.FC = () => {
   const classes = useStyles();
@@ -121,9 +122,9 @@ const SignUpPage: React.FC = () => {
     <Grid container component="main" className={classes.root}>
       <Grid item xs={12} sm={8} md={6} lg={5}>
         <Box className={classes.box}>
-          <Typography component="h1" variant="h5">
-            Sign Up
-          </Typography>
+          <Link to="/">
+            <img className={classes.logo} src={logo} alt="mymo logo" />
+          </Link>
           <form className={classes.form} noValidate method="post" onSubmit={handleSubmit}>
             <Grid container spacing={2} wrap="nowrap">
               <Grid item xs={12} sm={6}>
@@ -272,9 +273,13 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: '100%',
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(4),
   },
   button: {
     marginTop: '20px',
+  },
+  logo: {
+    width: '240px',
+    marginTop: theme.spacing(4),
   },
 }));

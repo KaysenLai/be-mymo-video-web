@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
+import { Link } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,6 +10,7 @@ import randomImg from '../assets/randomImg';
 import { emailErrorText, validateEmail, passwordEmptyText } from '../utils/validation';
 import { GoogleOutlined } from '@ant-design/icons';
 import { GoogleLogin } from 'react-google-login';
+import logo from '../assets/img/MYMO_logo.svg';
 
 const SignInPage: React.FC = () => {
   const classes = useStyles();
@@ -17,6 +18,7 @@ const SignInPage: React.FC = () => {
   if (randomImgUrl === '') setRandomImgUrl(randomImg());
   const [email, setEmail] = useState({ value: '', error: false, helperText: '' });
   const [password, setPassword] = useState({ value: '', error: false, helperText: '' });
+  const googleAuthKey = process.env.REACT_APP_GOOGLE_AUTH || '';
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -66,9 +68,9 @@ const SignInPage: React.FC = () => {
     <Grid container component="main" className={classes.root}>
       <Grid item xs={12} sm={8} md={6} lg={4}>
         <Box className={classes.box}>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
+          <Link to="/">
+            <img className={classes.logo} src={logo} alt="mymo logo" />
+          </Link>
           <form className={classes.form} noValidate method="post" onSubmit={handleSubmit}>
             <TextField
               variant="outlined"
@@ -100,7 +102,7 @@ const SignInPage: React.FC = () => {
           </form>
           <Divider variant="middle" className={classes.divider} />
           <GoogleLogin
-            clientId="461763116622-f6rghot464nbe6em99pv2flmf3hrkcj5.apps.googleusercontent.com"
+            clientId={googleAuthKey}
             render={(renderProps) => (
               <Button
                 fullWidth
@@ -170,7 +172,7 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: '100%',
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(4),
   },
   button: {
     marginTop: '20px',
@@ -178,5 +180,8 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     width: '100%',
     marginTop: '20px',
+  },
+  logo: {
+    width: '240px',
   },
 }));
