@@ -121,10 +121,11 @@ const SignInPage: React.FC = () => {
             onFailure={handleGoogleFailure}
             cookiePolicy="single_host_origin"
           />
-
-          <Button fullWidth variant="contained" size="large" color="primary" className={`${classes.button} btn-grey`}>
-            Create an account
-          </Button>
+          <Link to="signup" className={classes.link}>
+            <Button fullWidth variant="contained" size="large" color="primary" className={`${classes.button} btn-grey`}>
+              Create an account
+            </Button>
+          </Link>
         </Box>
       </Grid>
       <Grid
@@ -183,5 +184,8 @@ const useStyles = makeStyles((theme) => ({
   },
   logo: {
     width: '200px',
+  },
+  link: {
+    width: '100%',
   },
 }));

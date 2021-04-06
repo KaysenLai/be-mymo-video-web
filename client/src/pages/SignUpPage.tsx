@@ -20,6 +20,7 @@ import {
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import logo from '../assets/img/MYMO_logo.svg';
+import Typography from '@material-ui/core/Typography';
 
 const SignUpPage: React.FC = () => {
   const classes = useStyles();
@@ -222,10 +223,12 @@ const SignUpPage: React.FC = () => {
             <Button type="submit" fullWidth variant="contained" size="large" color="primary" className={classes.button}>
               Sign Up
             </Button>
-            <Button fullWidth variant="contained" size="large" color="primary" className={`${classes.button} btn-grey`}>
-              Sign Up
-            </Button>
           </form>
+          <Link to="signin">
+            <Typography className={classes.text} variant="body1">
+              Already have an account?
+            </Typography>
+          </Link>
         </Box>
       </Grid>
       <Grid
@@ -281,5 +284,15 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     width: '200px',
     marginTop: theme.spacing(2),
+  },
+  text: {
+    marginTop: theme.spacing(3),
+    color: theme.palette.grey[300],
+    transition: 'color 0.3s ease',
+    cursor: 'pointer',
+
+    '&:hover': {
+      color: theme.palette.primary.light,
+    },
   },
 }));
