@@ -5,7 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import GhostButton from './GhostButton';
-import logo from '../assets/img/MYMO_logo_small.svg';
+import logo from '../assets/img/MYMO_logo.svg';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({

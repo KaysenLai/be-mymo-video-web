@@ -254,7 +254,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundPosition: 'center',
   },
   box: {
-    margin: theme.spacing(4, 0),
+    margin: theme.spacing(3, 0),
     [theme.breakpoints.up('xs')]: {
       margin: theme.spacing(4, 4),
     },
@@ -273,13 +273,13 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: '100%',
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(3),
   },
   button: {
     marginTop: '20px',
   },
   logo: {
-    width: '240px',
-    marginTop: theme.spacing(4),
+    width: '200px',
+    marginTop: theme.spacing(2),
   },
 }));

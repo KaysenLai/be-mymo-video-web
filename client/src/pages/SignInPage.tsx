@@ -182,6 +182,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '20px',
   },
   logo: {
-    width: '240px',
+    width: '200px',
   },
 }));
