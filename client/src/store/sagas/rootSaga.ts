@@ -1,8 +1,7 @@
 import { takeLatest } from 'redux-saga/effects';
-import { asyncHandleTodo } from './handlers/todo';
+import { REQUEST_USER_LOGIN } from '../actions/user';
+import { handleUserLogin } from './handlers/user';
 
 export function* watcherSaga() {
-  // yield takeLatest(actions.REQUEST_TODO_LIST, asyncHandleTodo);
-  // yield takeLatest(actions.REQUEST_ONE_TODO, asyncHandleTodo);
-  // yield takeLatest(actions.REQUEST_DEFAULT_TODO, asyncHandleTodo);
+  yield takeLatest(REQUEST_USER_LOGIN, handleUserLogin);
 }

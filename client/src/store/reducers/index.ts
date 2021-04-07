@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 
-import todoReducer from './todo';
+import { userLoginReducer } from './user';
 
 const reducers = combineReducers({
-  todo: todoReducer,
+  userLogin: userLoginReducer,
 });
 
 export default reducers;

@@ -6,3 +6,8 @@ export interface todo {
 }
 
 export type todoList = Array<todo>;
+
+export interface loginInfo {
+  email: string;
+  password: string;
+}

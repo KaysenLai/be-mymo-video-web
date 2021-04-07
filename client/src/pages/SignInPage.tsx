@@ -11,6 +11,8 @@ import { emailErrorText, validateEmail, passwordEmptyText } from '../utils/valid
 import { GoogleOutlined } from '@ant-design/icons';
 import { GoogleLogin } from 'react-google-login';
 import logo from '../assets/img/MYMO_logo.svg';
+import { useDispatch } from 'react-redux';
+import { requestUserLogin } from '../store/actions/user';
 
 const SignInPage: React.FC = () => {
   const classes = useStyles();
@@ -19,19 +21,26 @@ const SignInPage: React.FC = () => {
   const [email, setEmail] = useState({ value: '', error: false, helperText: '' });
   const [password, setPassword] = useState({ value: '', error: false, helperText: '' });
   const googleAuthKey = process.env.REACT_APP_GOOGLE_AUTH || '';
+  const dispatch = useDispatch();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    if (email.value === '') setEmail({ ...email, error: true, helperText: emailErrorText });
-    if (password.value === '') setPassword({ ...password, error: true, helperText: passwordEmptyText });
+    if (email.value === '') {
+      setEmail({ ...email, error: true, helperText: emailErrorText });
+      return;
+    }
+    if (password.value === '') {
+      setPassword({ ...password, error: true, helperText: passwordEmptyText });
+      return;
+    }
 
     const callback = () => {
       if (email.error || password.error) return;
-      const formData = {
+      const loginInfo = {
         email: email.value,
         password: password.value,
       };
-      console.log(formData);
+      dispatch(requestUserLogin(loginInfo));
     };
     setTimeout(callback, 200);
   };

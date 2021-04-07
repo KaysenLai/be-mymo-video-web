@@ -7,7 +7,7 @@ import {
   STORE_TODO_LIST,
   STORE_TODO_LIST_LENGTH,
 } from '../actions/actionTypes';
-import initialSate from './initialState';
+import initialSate from '../initialState';
 import { Action } from '../../types';
 
 const initialToDoState = initialSate.todo;
