@@ -13,9 +13,7 @@ router.post('/googlelogin', user.googleLogin);
 router.post('/signup', user.signup);
 
 router.get('/token', auth, async (req, res) => {
-  console.log(req?.userId);
   const userId = await userModel.findById(req?.userId);
-  console.log(userId);
   res.send('token');
 });
 
