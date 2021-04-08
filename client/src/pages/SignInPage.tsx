@@ -70,9 +70,12 @@ const SignInPage: React.FC = (props: any) => {
   };
 
   const handleGoogleSuccess = async (res: any) => {
+    const profile = res?.profileObj;
+    const token = res?.tokenId;
+    const { email, name, imageUrl } = profile;
+
     console.log(res);
-    const result: object = res?.profileObj;
-    const token: string = res?.tokenId;
+    localStorage.setItem('user', JSON.stringify('data'));
     // localStorage.setItem('profile', JSON.stringify({ result, token }));
     // const user = JSON.parse(localStorage.getItem('profile') as string);
     // when log out, localStorage.clear();

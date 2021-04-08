@@ -12,6 +12,8 @@ import { State } from '../types/state';
 import LetterAvatar from './LetterAvatar';
 import { storeUserLogout } from '../store/actions/user';
 import { useHistory } from 'react-router-dom';
+import { UserInfo } from '../types';
+import { Avatar } from '@material-ui/core';
 
 const MainNav = () => {
   const classes = useStyles();
@@ -30,7 +32,7 @@ const MainNav = () => {
               </Link>
             </Grid>
             <Grid item>
-              {isAuthenticated && <LogoutButtons fullName={userInfo.name} />}
+              {isAuthenticated && <LogoutButtons userInfo={userInfo} />}
               {!isAuthenticated && <LoginButtons />}
             </Grid>
           </Grid>
@@ -40,7 +42,7 @@ const MainNav = () => {
   );
 };
 
-const LogoutButtons = ({ fullName }: { fullName: string }) => {
+const LogoutButtons = ({ userInfo }: { userInfo: UserInfo }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -55,10 +57,14 @@ const LogoutButtons = ({ fullName }: { fullName: string }) => {
     <>
       <Grid container justify="center" alignItems="center" spacing={2}>
         <Grid item>
-          <LetterAvatar className={classes.avatar} fullName={fullName} />
+          {userInfo.avatar === '' ? (
+            <LetterAvatar className={classes.avatar} fullName={userInfo.name} />
+          ) : (
+            <Avatar alt={userInfo.name} className={classes.avatar} src={userInfo.avatar} />
+          )}
         </Grid>
         <Grid item>
-          <span className={classes.userName}>{fullName}</span>
+          <span className={classes.userName}>{userInfo.name}</span>
         </Grid>
         <Grid item>
           <GhostButton size="small" onClick={handleLogout}>
@@ -108,6 +114,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '20px',
   },
   userName: {
-    fontSize: '20px',
+    fontSize: '18px',
   },
 }));

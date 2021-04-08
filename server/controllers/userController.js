@@ -12,12 +12,12 @@ const login = asyncHandler(async (req, res) => {
   }
 
   const isRightPassword = await user.comparePassword(password);
-
   if (isRightPassword) {
     return res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      avatar: user.avatar,
       token: getToken(user._id),
     });
   } else {
@@ -29,6 +29,14 @@ const googleLogin = asyncHandler(async (req, res) => {
   const { email, name } = req.body;
   const user = await User.findOne({ email });
 
+  if (user) {
+    return res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    });
+  }
+
   if (!user) {
     const password = getRandomPassword();
     const user = new User({ name, email, password });
@@ -39,8 +47,6 @@ const googleLogin = asyncHandler(async (req, res) => {
       email: user.email,
     });
   }
-
-  return res.status(200).send({ message: 'Google log in successfully.' });
 });
 
 const signup = asyncHandler(async (req, res) => {
@@ -58,6 +64,7 @@ const signup = asyncHandler(async (req, res) => {
     _id: user._id,
     name: user.name,
     email: user.email,
+    avatar: user.avatar,
     token: getToken(user._id),
   });
 });

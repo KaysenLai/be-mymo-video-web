@@ -11,11 +11,22 @@ import jwt from 'jsonwebtoken';
 const getLocalUser = () => {
   const userLocal = JSON.parse(<string>localStorage.getItem('user'));
   if (!userLocal) return null;
+
   const secret = process.env.REACT_APP_JWT_SECRET;
+  const token = userLocal.token;
+
   try {
-    const decoded = secret && jwt.verify(userLocal.token, secret);
+    const isGoogleToken = token.length > 500;
+    let decoded;
+    if (isGoogleToken) {
+      decoded = jwt.decode(token);
+    } else {
+      decoded = secret && jwt.verify(userLocal.token, secret);
+    }
     // @ts-ignore
-    const isExpired = Date.now() - decoded?.exp * 1000 > 0;
+    let exp = decoded?.exp;
+    const isExpired = Date.now() - exp * 1000 > 0;
+
     if (isExpired) return null;
 
     return {
