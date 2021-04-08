@@ -4,11 +4,14 @@ import config from './config/app.js';
 import userRoutes from './routes/userRoutes.js';
 import { errorHandler, notFoundHandler } from './middlewares/errorMiddleware.js';
 import connectDB from './config/mongoDB.js';
+import cors from 'cors';
 
 dotenv.config();
-const app = express();
 connectDB();
 
+const app = express();
+
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

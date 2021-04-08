@@ -9,4 +9,9 @@ export interface State {
     defaultQueryId: number;
     defaultTodo: todo;
   };
+  userLogin: {
+    isLoading: boolean;
+    errorMessage: string;
+    userInfo: any;
+  };
 }

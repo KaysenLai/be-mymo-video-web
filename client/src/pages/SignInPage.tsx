@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -11,10 +11,14 @@ import { emailErrorText, validateEmail, passwordEmptyText } from '../utils/valid
 import { GoogleOutlined } from '@ant-design/icons';
 import { GoogleLogin } from 'react-google-login';
 import logo from '../assets/img/MYMO_logo.svg';
-import { useDispatch } from 'react-redux';
-import { requestUserLogin } from '../store/actions/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { requestUserLogin, storeUserLoginFail } from '../store/actions/user';
+import { State } from '../types/state';
+import MyMessage from '../components/MyMessage';
+import Loading from '../components/Loading';
 
-const SignInPage: React.FC = () => {
+const SignInPage: React.FC = (props: any) => {
+  const { history } = props;
   const classes = useStyles();
   const [randomImgUrl, setRandomImgUrl] = useState('');
   if (randomImgUrl === '') setRandomImgUrl(randomImg());
@@ -22,6 +26,12 @@ const SignInPage: React.FC = () => {
   const [password, setPassword] = useState({ value: '', error: false, helperText: '' });
   const googleAuthKey = process.env.REACT_APP_GOOGLE_AUTH || '';
   const dispatch = useDispatch();
+  const userLogin = useSelector((state: State) => state.userLogin);
+  const { isLoading, errorMessage, userInfo } = userLogin;
+
+  useEffect(() => {
+    if (userInfo) history.push('/');
+  }, [history, userInfo]);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -74,79 +84,97 @@ const SignInPage: React.FC = () => {
   };
 
   return (
-    <Grid container component="main" className={classes.root}>
-      <Grid item xs={12} sm={8} md={6} lg={4}>
-        <Box className={classes.box}>
-          <Link to="/">
-            <img className={classes.logo} src={logo} alt="mymo logo" />
-          </Link>
-          <form className={classes.form} noValidate method="post" onSubmit={handleSubmit}>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              label="Email Address"
-              name="email"
-              autoFocus
-              value={email.value}
-              error={email.error}
-              helperText={email.helperText}
-              onChange={handleEmailOnchange}
+    <>
+      <Loading isLoading={isLoading} />
+      {errorMessage !== '' && <MyMessage msg={errorMessage} severity="error" />}
+      <Grid container component="main" className={classes.root}>
+        <Grid item xs={12} sm={8} md={6} lg={4}>
+          <Box className={classes.box}>
+            <Link to="/">
+              <img className={classes.logo} src={logo} alt="mymo logo" />
+            </Link>
+
+            <form className={classes.form} noValidate method="post" onSubmit={handleSubmit}>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label="Email Address"
+                name="email"
+                autoFocus
+                value={email.value}
+                error={email.error}
+                helperText={email.helperText}
+                onChange={handleEmailOnchange}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                value={password.value}
+                error={password.error}
+                helperText={password.helperText}
+                onChange={handlePasswordOnchange}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                size="large"
+                color="primary"
+                className={classes.button}
+              >
+                Sign In
+              </Button>
+            </form>
+            <Divider variant="middle" className={classes.divider} />
+            <GoogleLogin
+              clientId={googleAuthKey}
+              render={(renderProps) => (
+                <Button
+                  fullWidth
+                  variant="contained"
+                  size="large"
+                  color="primary"
+                  className={`${classes.button} btn-grey`}
+                  startIcon={<GoogleOutlined />}
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                >
+                  Sign In with Google
+                </Button>
+              )}
+              onSuccess={handleGoogleSuccess}
+              onFailure={handleGoogleFailure}
+              cookiePolicy="single_host_origin"
             />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              value={password.value}
-              error={password.error}
-              helperText={password.helperText}
-              onChange={handlePasswordOnchange}
-            />
-            <Button type="submit" fullWidth variant="contained" size="large" color="primary" className={classes.button}>
-              Sign In
-            </Button>
-          </form>
-          <Divider variant="middle" className={classes.divider} />
-          <GoogleLogin
-            clientId={googleAuthKey}
-            render={(renderProps) => (
+            <Link to="signup" className={classes.link}>
               <Button
                 fullWidth
                 variant="contained"
                 size="large"
                 color="primary"
                 className={`${classes.button} btn-grey`}
-                startIcon={<GoogleOutlined />}
-                onClick={renderProps.onClick}
-                disabled={renderProps.disabled}
               >
-                Sign In with Google
+                Create an account
               </Button>
-            )}
-            onSuccess={handleGoogleSuccess}
-            onFailure={handleGoogleFailure}
-            cookiePolicy="single_host_origin"
-          />
-          <Link to="signup" className={classes.link}>
-            <Button fullWidth variant="contained" size="large" color="primary" className={`${classes.button} btn-grey`}>
-              Create an account
-            </Button>
-          </Link>
-        </Box>
+            </Link>
+          </Box>
+        </Grid>
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={6}
+          lg={8}
+          className={classes.image}
+          style={{ backgroundImage: `url(${randomImgUrl})` }}
+        />
       </Grid>
-      <Grid
-        item
-        xs={false}
-        sm={4}
-        md={6}
-        lg={8}
-        className={classes.image}
-        style={{ backgroundImage: `url(${randomImgUrl})` }}
-      />
-    </Grid>
+    </>
   );
 };
 

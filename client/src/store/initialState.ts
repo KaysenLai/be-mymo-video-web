@@ -7,6 +7,11 @@ const initialSate = {
     defaultQueryId: 10,
     defaultTodo: {},
   },
+  userLogin: {
+    isLoading: false,
+    errorMessage: '',
+    userInfo: null,
+  },
 };
 
 export default initialSate;

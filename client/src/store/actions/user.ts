@@ -2,6 +2,7 @@ import { Action, loginInfo, todoList } from '../../types';
 import * as actions from './actionTypes';
 
 export const REQUEST_USER_LOGIN = 'USER_LOGIN_REQUEST';
+export const STORE_USER_LOGIN_ISLOADING = 'STORE_USER_LOGIN_ISLOADING';
 export const STORE_USER_LOGIN_SUCCESS = 'STORE_USER_LOGIN_SUCCESS';
 export const STORE_USER_LOGIN_FAIL = 'STORE_USER_LOGIN_FAIL';
 export const STORE_USER_LOGOUT = 'STORE_USER_LOGOUT';
@@ -9,6 +10,10 @@ export const STORE_USER_LOGOUT = 'STORE_USER_LOGOUT';
 export const requestUserLogin = (loginInfo: loginInfo): Action<loginInfo> => ({
   type: REQUEST_USER_LOGIN,
   payload: loginInfo,
+});
+
+export const storeUserLoginIsLoading = (): Action => ({
+  type: STORE_USER_LOGIN_ISLOADING,
 });
 
 export const storeUserLoginSuccess = (userInfo: any): Action<any> => ({
