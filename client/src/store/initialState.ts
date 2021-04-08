@@ -1,13 +1,6 @@
 const initialSate = {
-  todo: {
-    todoList: [],
-    pageTodoList: [],
-    todoListLength: 0,
-    oneTodo: {},
-    defaultQueryId: 10,
-    defaultTodo: {},
-  },
   userLogin: {
+    isAuthenticated: false,
     isLoading: false,
     errorMessage: '',
     userInfo: null,

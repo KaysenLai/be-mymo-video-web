@@ -13,8 +13,9 @@ export function* handleUserLogin(action: Action): any {
     case REQUEST_USER_LOGIN: {
       try {
         yield put(storeUserLoginIsLoading());
-        const res = yield call(axiosUserLogin, action.payload);
-        yield put(storeUserLoginSuccess(res.data));
+        const { data } = yield call(axiosUserLogin, action.payload);
+        yield put(storeUserLoginSuccess(data));
+        localStorage.setItem('user', JSON.stringify(data));
       } catch (err) {
         console.log(err.response);
         yield put(storeUserLoginFail(err.response.data.message));

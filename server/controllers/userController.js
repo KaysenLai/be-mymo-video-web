@@ -18,7 +18,6 @@ const login = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-      gender: user.gender,
       token: getToken(user._id),
     });
   } else {

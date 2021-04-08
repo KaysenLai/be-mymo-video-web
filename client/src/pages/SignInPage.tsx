@@ -27,10 +27,10 @@ const SignInPage: React.FC = (props: any) => {
   const googleAuthKey = process.env.REACT_APP_GOOGLE_AUTH || '';
   const dispatch = useDispatch();
   const userLogin = useSelector((state: State) => state.userLogin);
-  const { isLoading, errorMessage, userInfo } = userLogin;
+  const { isLoading, errorMessage, userInfo, isAuthenticated } = userLogin;
 
   useEffect(() => {
-    if (userInfo) history.push('/');
+    if (isAuthenticated) history.push('/');
   }, [history, userInfo]);
 
   const handleSubmit = (e: any) => {

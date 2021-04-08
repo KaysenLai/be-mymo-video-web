@@ -1,17 +1,10 @@
-import { todo, todoList } from './data';
+import { UserInfo } from './common';
 
 export interface State {
-  todo: {
-    todoList: todoList;
-    pageTodoList: todoList;
-    todoListLength: number;
-    oneTodo: todo;
-    defaultQueryId: number;
-    defaultTodo: todo;
-  };
   userLogin: {
+    isAuthenticated: boolean;
     isLoading: boolean;
     errorMessage: string;
-    userInfo: any;
+    userInfo: UserInfo;
   };
 }

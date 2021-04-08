@@ -6,6 +6,7 @@ const validateEmail = (email: string) => {
 
 const fNameEmptyText = 'First name is empty.';
 const lNameEmptyText = 'Last name is empty.';
+const nameSpaceText = 'The name can not contain a space.';
 
 const emailErrorText = 'Please enter a valid email.';
 
@@ -20,6 +21,7 @@ export {
   passwordEmptyText,
   fNameEmptyText,
   lNameEmptyText,
+  nameSpaceText,
   confirmEmptyText,
   diffPasswordText,
   passwordLengthErrorText,

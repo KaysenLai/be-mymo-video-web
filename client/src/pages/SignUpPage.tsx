@@ -16,6 +16,7 @@ import {
   confirmEmptyText,
   diffPasswordText,
   passwordLengthErrorText,
+  nameSpaceText,
 } from '../utils/validation';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
@@ -61,14 +62,27 @@ const SignUpPage: React.FC = () => {
 
   const handleFNameOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputFName = e.target.value;
-    if (inputFName === '') setFName({ value: inputFName, error: true, helperText: fNameEmptyText });
-    else setFName({ value: inputFName, error: false, helperText: '' });
+    if (inputFName === '') {
+      setFName({ value: inputFName, error: true, helperText: fNameEmptyText });
+      return;
+    }
+    if (inputFName.indexOf(' ') !== -1) {
+      setFName({ value: inputFName, error: true, helperText: nameSpaceText });
+      return;
+    }
+    setFName({ value: inputFName, error: false, helperText: '' });
   };
 
   const handleLNameOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputLName = e.target.value;
-    if (inputLName === '') setLName({ value: inputLName, error: true, helperText: lNameEmptyText });
-    else setLName({ value: inputLName, error: false, helperText: '' });
+    if (inputLName === '') {
+      setLName({ value: inputLName, error: true, helperText: lNameEmptyText });
+    }
+    if (inputLName.indexOf(' ') !== -1) {
+      setFName({ value: inputLName, error: true, helperText: nameSpaceText });
+      return;
+    }
+    setLName({ value: inputLName, error: false, helperText: '' });
   };
 
   const handleEmailOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +100,13 @@ const SignUpPage: React.FC = () => {
     if (inputPassword.length < 8 || inputPassword.length > 30) {
       setPassword({ value: inputPassword, error: true, helperText: passwordLengthErrorText });
       return;
-    } else setPassword({ value: inputPassword, error: false, helperText: '' });
+    }
+    if (inputPassword === confirm.value) {
+      setConfirm({ ...confirm, error: false, helperText: '' });
+    } else {
+      setConfirm({ ...confirm, error: true, helperText: diffPasswordText });
+    }
+    setPassword({ value: inputPassword, error: false, helperText: '' });
   };
 
   const handleConfirmOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
