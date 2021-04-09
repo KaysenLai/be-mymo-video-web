@@ -45,7 +45,7 @@ const userLoginState = getLocalUser() ? getLocalUser() : initialState.userLogin;
 export const userLoginReducer = (state = userLoginState, action: Action) => {
   switch (action.type) {
     case STORE_USER_LOGIN_ISLOADING:
-      return { ...state, isLoading: true };
+      return { ...state, isLoading: action.payload };
     case STORE_USER_LOGIN_SUCCESS:
       return { isAuthenticated: true, isLoading: false, userInfo: action.payload, errorMessage: '' };
     case STORE_USER_LOGIN_FAIL:

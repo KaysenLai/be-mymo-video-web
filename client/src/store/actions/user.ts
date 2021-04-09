@@ -1,6 +1,7 @@
-import { Action, LoginInfo } from '../../types';
+import { Action, GoogleLogin, GoogleLoginInfo, LoginInfo } from '../../types';
 
 export const REQUEST_USER_LOGIN = 'USER_LOGIN_REQUEST';
+export const REQUEST_GOOGLE_USER_LOGIN = 'REQUEST_GOOGLE_USER_LOGIN';
 export const STORE_USER_LOGIN_ISLOADING = 'STORE_USER_LOGIN_ISLOADING';
 export const STORE_USER_LOGIN_SUCCESS = 'STORE_USER_LOGIN_SUCCESS';
 export const STORE_USER_LOGIN_FAIL = 'STORE_USER_LOGIN_FAIL';
@@ -11,11 +12,17 @@ export const requestUserLogin = (loginInfo: LoginInfo): Action<LoginInfo> => ({
   payload: loginInfo,
 });
 
-export const storeUserLoginIsLoading = (): Action => ({
-  type: STORE_USER_LOGIN_ISLOADING,
+export const requestGoogleUserLogin = (googleLogin: GoogleLogin): Action<GoogleLogin> => ({
+  type: REQUEST_GOOGLE_USER_LOGIN,
+  payload: googleLogin,
 });
 
-export const storeUserLoginSuccess = (userInfo: any): Action<any> => ({
+export const storeUserLoginIsLoading = (isLoading: boolean): Action<boolean> => ({
+  type: STORE_USER_LOGIN_ISLOADING,
+  payload: isLoading,
+});
+
+export const storeUserLoginSuccess = (userInfo: any): Action => ({
   type: STORE_USER_LOGIN_SUCCESS,
   payload: userInfo,
 });

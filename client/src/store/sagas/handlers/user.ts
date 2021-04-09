@@ -1,23 +1,34 @@
 import { Action } from '../../../types';
 import {
+  REQUEST_GOOGLE_USER_LOGIN,
   REQUEST_USER_LOGIN,
   storeUserLoginFail,
   storeUserLoginIsLoading,
   storeUserLoginSuccess,
 } from '../../actions/user';
 import { call, put, select } from 'redux-saga/effects';
-import { axiosUserLogin } from '../requests/user';
+import { axiosUserGoogleLogin, axiosUserLogin } from '../requests/user';
 
 export function* handleUserLogin(action: Action): any {
   switch (action.type) {
     case REQUEST_USER_LOGIN: {
       try {
-        yield put(storeUserLoginIsLoading());
+        yield put(storeUserLoginIsLoading(true));
         const { data } = yield call(axiosUserLogin, action.payload);
         yield put(storeUserLoginSuccess(data));
         localStorage.setItem('user', JSON.stringify(data));
       } catch (err) {
-        console.log(err.response);
+        yield put(storeUserLoginFail(err.response.data.message));
+      }
+      break;
+    }
+    case REQUEST_GOOGLE_USER_LOGIN: {
+      try {
+        const { data } = yield call(axiosUserGoogleLogin, action.payload.GoogleLoginInfo);
+        const user = { ...data, avatar: action.payload.avatar, token: action.payload.token };
+        yield put(storeUserLoginSuccess(user));
+        localStorage.setItem('user', JSON.stringify(user));
+      } catch (err) {
         yield put(storeUserLoginFail(err.response.data.message));
       }
       break;

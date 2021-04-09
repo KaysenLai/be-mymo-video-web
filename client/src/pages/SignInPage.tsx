@@ -12,7 +12,12 @@ import { GoogleOutlined } from '@ant-design/icons';
 import { GoogleLogin } from 'react-google-login';
 import logo from '../assets/img/MYMO_logo.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { requestUserLogin, storeUserLoginFail } from '../store/actions/user';
+import {
+  requestGoogleUserLogin,
+  requestUserLogin,
+  storeUserLoginFail,
+  storeUserLoginIsLoading,
+} from '../store/actions/user';
 import { State } from '../types/state';
 import MyMessage from '../components/MyMessage';
 import Loading from '../components/Loading';
@@ -73,17 +78,13 @@ const SignInPage: React.FC = (props: any) => {
     const profile = res?.profileObj;
     const token = res?.tokenId;
     const { email, name, imageUrl } = profile;
-
-    console.log(res);
-    localStorage.setItem('user', JSON.stringify('data'));
-    // localStorage.setItem('profile', JSON.stringify({ result, token }));
-    // const user = JSON.parse(localStorage.getItem('profile') as string);
-    // when log out, localStorage.clear();
+    const googleLogin = { avatar: imageUrl, token, GoogleLoginInfo: { email, name } };
+    dispatch(requestGoogleUserLogin(googleLogin));
   };
 
   const handleGoogleFailure = (error: any) => {
+    dispatch(storeUserLoginIsLoading(false));
     console.log(error);
-    console.log('Google sign in was fail');
   };
 
   return (
@@ -137,18 +138,25 @@ const SignInPage: React.FC = (props: any) => {
             <GoogleLogin
               clientId={googleAuthKey}
               render={(renderProps) => (
-                <Button
-                  fullWidth
-                  variant="contained"
-                  size="large"
-                  color="primary"
-                  className={`${classes.button} btn-grey`}
-                  startIcon={<GoogleOutlined />}
-                  onClick={renderProps.onClick}
-                  disabled={renderProps.disabled}
+                <div
+                  className={classes.googleBtnWrap}
+                  onClick={() => {
+                    dispatch(storeUserLoginIsLoading(true));
+                  }}
                 >
-                  Sign In with Google
-                </Button>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    size="large"
+                    color="primary"
+                    className={`${classes.button} btn-grey`}
+                    startIcon={<GoogleOutlined />}
+                    onClick={renderProps.onClick}
+                    disabled={renderProps.disabled}
+                  >
+                    Sign In with Google
+                  </Button>
+                </div>
               )}
               onSuccess={handleGoogleSuccess}
               onFailure={handleGoogleFailure}
@@ -226,6 +234,9 @@ const useStyles = makeStyles((theme) => ({
     width: '200px',
   },
   link: {
+    width: '100%',
+  },
+  googleBtnWrap: {
     width: '100%',
   },
 }));

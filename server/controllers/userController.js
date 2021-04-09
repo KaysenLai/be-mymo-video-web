@@ -47,6 +47,8 @@ const googleLogin = asyncHandler(async (req, res) => {
       email: user.email,
     });
   }
+
+  res.status(401).send({ message: 'Google login failed.' });
 });
 
 const signup = asyncHandler(async (req, res) => {

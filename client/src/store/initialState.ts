@@ -3,7 +3,7 @@ const initialSate = {
     isAuthenticated: false,
     isLoading: false,
     errorMessage: '',
-    userInfo: null,
+    userInfo: { _id: '', name: '', email: '', token: '', avatar: '' },
   },
 };
 

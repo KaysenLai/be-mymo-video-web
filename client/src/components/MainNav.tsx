@@ -57,9 +57,8 @@ const LogoutButtons = ({ userInfo }: { userInfo: UserInfo }) => {
     <>
       <Grid container justify="center" alignItems="center" spacing={2}>
         <Grid item>
-          {userInfo.avatar === '' ? (
-            <LetterAvatar className={classes.avatar} fullName={userInfo.name} />
-          ) : (
+          {userInfo.avatar === '' && <LetterAvatar className={classes.avatar} fullName={userInfo.name} />}
+          {userInfo.avatar.startsWith('http') && (
             <Avatar alt={userInfo.name} className={classes.avatar} src={userInfo.avatar} />
           )}
         </Grid>
