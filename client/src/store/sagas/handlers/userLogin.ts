@@ -5,8 +5,8 @@ import {
   storeUserLoginFail,
   storeUserLoginIsLoading,
   storeUserLoginSuccess,
-} from '../../actions/user';
-import { call, put, select } from 'redux-saga/effects';
+} from '../../actions/userLogin';
+import { call, put } from 'redux-saga/effects';
 import { axiosUserGoogleLogin, axiosUserLogin } from '../requests/user';
 
 export function* handleUserLogin(action: Action): any {

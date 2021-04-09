@@ -3,6 +3,14 @@ export interface Action<T = any> {
   payload?: T;
 }
 
+export interface UserInfo {
+  _id?: string;
+  name: string;
+  email: string;
+  token: string;
+  avatar: string;
+}
+
 export interface LoginInfo {
   email: string;
   password: string;
@@ -19,10 +27,8 @@ export interface GoogleLoginInfo {
   name: string;
 }
 
-export interface UserInfo {
-  _id?: string;
+export interface SignUpInfo {
   name: string;
   email: string;
-  token: string;
-  avatar: string;
+  password: string;
 }

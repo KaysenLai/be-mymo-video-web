@@ -5,6 +5,10 @@ const initialSate = {
     errorMessage: '',
     userInfo: { _id: '', name: '', email: '', token: '', avatar: '' },
   },
+  userSignUp: {
+    isLoading: false,
+    errorMessage: '',
+  },
 };
 
 export default initialSate;

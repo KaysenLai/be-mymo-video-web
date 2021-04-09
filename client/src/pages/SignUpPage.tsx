@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -22,9 +22,16 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import logo from '../assets/img/MYMO_logo.svg';
 import Typography from '@material-ui/core/Typography';
+import { useDispatch, useSelector } from 'react-redux';
+import { State } from '../types/state';
+import Loading from '../components/Loading';
+import MyMessage from '../components/MyMessage';
+import { SignUpInfo } from '../types';
+import { requestUserSignUp } from '../store/actions/userSignUp';
 
-const SignUpPage: React.FC = () => {
+const SignUpPage: React.FC = (props: any) => {
   const classes = useStyles();
+  const { history } = props;
   const [randomImgUrl, setRandomImgUrl] = useState('');
   if (randomImgUrl === '') setRandomImgUrl(randomImg());
 
@@ -39,6 +46,16 @@ const SignUpPage: React.FC = () => {
   const showIcon = <Visibility style={{ color: '#BCBCBC' }} />;
   const hideIcon = <VisibilityOff style={{ color: '#BCBCBC' }} />;
 
+  const dispatch = useDispatch();
+  const userLogin = useSelector((state: State) => state.userLogin);
+  const userSignUp = useSelector((state: State) => state.userSignUp);
+  const { isAuthenticated, userInfo } = userLogin;
+  const { isLoading, errorMessage } = userSignUp;
+
+  useEffect(() => {
+    if (isAuthenticated) history.push('/');
+  }, [history, userInfo]);
+
   const handleSubmit = (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
     if (fName.value === '') setFName({ ...fName, error: true, helperText: fNameEmptyText });
@@ -49,13 +66,13 @@ const SignUpPage: React.FC = () => {
 
     const callback = () => {
       if (fName.error || lName.error || email.error || password.error || confirm.error) return;
-      const formData = {
-        fName: fName.value,
-        lName: lName.value,
+      const signUpInfo: SignUpInfo = {
+        name: `${fName.value} ${lName.value}`,
         email: email.value,
         password: password.value,
       };
-      console.log(formData);
+
+      dispatch(requestUserSignUp(signUpInfo));
     };
     setTimeout(callback, 200);
   };
@@ -140,127 +157,138 @@ const SignUpPage: React.FC = () => {
   };
 
   return (
-    <Grid container component="main" className={classes.root}>
-      <Grid item xs={12} sm={8} md={6} lg={5}>
-        <Box className={classes.box}>
-          <Link to="/">
-            <img className={classes.logo} src={logo} alt="mymo logo" />
-          </Link>
-          <form className={classes.form} noValidate method="post" onSubmit={handleSubmit}>
-            <Grid container spacing={2} wrap="nowrap">
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  margin="normal"
-                  autoComplete="firstname"
-                  name="firstname"
-                  variant="outlined"
-                  fullWidth
-                  label="First Name"
-                  autoFocus
-                  value={fName.value}
-                  error={fName.error}
-                  helperText={fName.helperText}
-                  onChange={handleFNameOnchange}
-                />
+    <>
+      <Loading isLoading={isLoading} />
+      {errorMessage !== '' && <MyMessage msg={errorMessage} severity="error" />}
+      <Grid container component="main" className={classes.root}>
+        <Grid item xs={12} sm={8} md={6} lg={5}>
+          <Box className={classes.box}>
+            <Link to="/">
+              <img className={classes.logo} src={logo} alt="mymo logo" />
+            </Link>
+            <form className={classes.form} noValidate method="post" onSubmit={handleSubmit}>
+              <Grid container spacing={2} wrap="nowrap">
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    margin="normal"
+                    autoComplete="firstname"
+                    name="firstname"
+                    variant="outlined"
+                    fullWidth
+                    label="First Name"
+                    autoFocus
+                    value={fName.value}
+                    error={fName.error}
+                    helperText={fName.helperText}
+                    onChange={handleFNameOnchange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    label="Last Name"
+                    name="lastName"
+                    autoComplete="lastName"
+                    value={lName.value}
+                    error={lName.error}
+                    helperText={lName.helperText}
+                    onChange={handleLNameOnchange}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="lastName"
-                  value={lName.value}
-                  error={lName.error}
-                  helperText={lName.helperText}
-                  onChange={handleLNameOnchange}
-                />
-              </Grid>
-            </Grid>
 
-            <TextField
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              label="Email Address"
-              name="email"
-              value={email.value}
-              error={email.error}
-              helperText={email.helperText}
-              onChange={handleEmailOnchange}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              name="password"
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-              value={password.value}
-              error={password.error}
-              helperText={password.helperText}
-              onChange={handlePasswordOnchange}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
-                      {showPassword ? showIcon : hideIcon}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              name="confirm"
-              label="Confirm Password"
-              type={showConfirm ? 'text' : 'password'}
-              value={confirm.value}
-              error={confirm.error}
-              helperText={confirm.helperText}
-              onChange={handleConfirmOnchange}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleShowConfirm}
-                      onMouseDown={handleMouseDownPassword}
-                    >
-                      {showConfirm ? showIcon : hideIcon}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <Button type="submit" fullWidth variant="contained" size="large" color="primary" className={classes.button}>
-              Sign Up
-            </Button>
-          </form>
-          <Link to="signin">
-            <Typography className={classes.text} variant="body1">
-              Already have an account?
-            </Typography>
-          </Link>
-        </Box>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label="Email Address"
+                name="email"
+                value={email.value}
+                error={email.error}
+                helperText={email.helperText}
+                onChange={handleEmailOnchange}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                name="password"
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                value={password.value}
+                error={password.error}
+                helperText={password.helperText}
+                onChange={handlePasswordOnchange}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showPassword ? showIcon : hideIcon}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                name="confirm"
+                label="Confirm Password"
+                type={showConfirm ? 'text' : 'password'}
+                value={confirm.value}
+                error={confirm.error}
+                helperText={confirm.helperText}
+                onChange={handleConfirmOnchange}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleShowConfirm}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showConfirm ? showIcon : hideIcon}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                size="large"
+                color="primary"
+                className={classes.button}
+              >
+                Sign Up
+              </Button>
+            </form>
+            <Link to="signin">
+              <Typography className={classes.text} variant="body1">
+                Already have an account?
+              </Typography>
+            </Link>
+          </Box>
+        </Grid>
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={6}
+          lg={7}
+          className={classes.image}
+          style={{ backgroundImage: `url(${randomImgUrl})` }}
+        />
       </Grid>
-      <Grid
-        item
-        xs={false}
-        sm={4}
-        md={6}
-        lg={7}
-        className={classes.image}
-        style={{ backgroundImage: `url(${randomImgUrl})` }}
-      />
-    </Grid>
+    </>
   );
 };
 

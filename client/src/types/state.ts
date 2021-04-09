@@ -7,4 +7,8 @@ export interface State {
     errorMessage: string;
     userInfo: UserInfo;
   };
+  userSignUp: {
+    isLoading: boolean;
+    errorMessage: string;
+  };
 }

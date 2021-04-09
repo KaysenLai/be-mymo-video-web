@@ -17,7 +17,7 @@ import {
   requestUserLogin,
   storeUserLoginFail,
   storeUserLoginIsLoading,
-} from '../store/actions/user';
+} from '../store/actions/userLogin';
 import { State } from '../types/state';
 import MyMessage from '../components/MyMessage';
 import Loading from '../components/Loading';

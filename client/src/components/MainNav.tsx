@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../types/state';
 import LetterAvatar from './LetterAvatar';
-import { storeUserLogout } from '../store/actions/user';
+import { storeUserLogout } from '../store/actions/userLogin';
 import { useHistory } from 'react-router-dom';
 import { UserInfo } from '../types';
 import { Avatar } from '@material-ui/core';

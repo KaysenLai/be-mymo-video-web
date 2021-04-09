@@ -1,10 +1,10 @@
 import { Action } from '../../types';
 import {
   STORE_USER_LOGIN_FAIL,
-  STORE_USER_LOGIN_ISLOADING,
+  STORE_USER_LOGIN_IS_LOADING,
   STORE_USER_LOGIN_SUCCESS,
   STORE_USER_LOGOUT,
-} from '../actions/user';
+} from '../actions/userLogin';
 import initialState from '../initialState';
 import jwt from 'jsonwebtoken';
 
@@ -44,7 +44,7 @@ const userLoginState = getLocalUser() ? getLocalUser() : initialState.userLogin;
 
 export const userLoginReducer = (state = userLoginState, action: Action) => {
   switch (action.type) {
-    case STORE_USER_LOGIN_ISLOADING:
+    case STORE_USER_LOGIN_IS_LOADING:
       return { ...state, isLoading: action.payload };
     case STORE_USER_LOGIN_SUCCESS:
       return { isAuthenticated: true, isLoading: false, userInfo: action.payload, errorMessage: '' };
