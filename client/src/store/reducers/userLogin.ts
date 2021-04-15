@@ -1,5 +1,6 @@
 import { Action } from '../../types';
 import {
+  STORE_IS_OAUTH,
   STORE_USER_LOGIN_FAIL,
   STORE_USER_LOGIN_IS_LOADING,
   STORE_USER_LOGIN_SUCCESS,
@@ -9,7 +10,7 @@ import initialState from '../initialState';
 import jwt from 'jsonwebtoken';
 
 const getLocalUser = () => {
-  const userLocal = JSON.parse(<string>localStorage.getItem('user'));
+  const userLocal = JSON.parse(sessionStorage.getItem('user') as string);
   if (!userLocal) return null;
 
   const secret = process.env.REACT_APP_JWT_SECRET;
@@ -23,10 +24,12 @@ const getLocalUser = () => {
     } else {
       decoded = secret && jwt.verify(userLocal.token, secret);
     }
-    // @ts-ignore
-    let exp = decoded?.exp;
-    const isExpired = Date.now() - exp * 1000 > 0;
 
+    // @ts-ignore
+    const exp = decoded?.exp;
+    if (!exp) return null;
+
+    const isExpired = Date.now() - exp * 1000 > 0;
     if (isExpired) return null;
 
     return {
@@ -37,6 +40,7 @@ const getLocalUser = () => {
     };
   } catch (err) {
     console.log(err);
+    return null;
   }
 };
 
@@ -47,11 +51,13 @@ export const userLoginReducer = (state = userLoginState, action: Action) => {
     case STORE_USER_LOGIN_IS_LOADING:
       return { ...state, isLoading: action.payload };
     case STORE_USER_LOGIN_SUCCESS:
-      return { isAuthenticated: true, isLoading: false, userInfo: action.payload, errorMessage: '' };
+      return { ...state, isAuthenticated: true, isLoading: false, userInfo: action.payload, errorMessage: '' };
     case STORE_USER_LOGIN_FAIL:
       return { ...state, isLoading: false, errorMessage: action.payload };
     case STORE_USER_LOGOUT:
       return { ...state, isAuthenticated: false, userInfo: null };
+    case STORE_IS_OAUTH:
+      return { ...state, isOAuth: action.payload };
     default:
       return state;
   }

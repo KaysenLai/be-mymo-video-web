@@ -15,6 +15,30 @@ import { useHistory } from 'react-router-dom';
 import { UserInfo } from '../types';
 import { Avatar } from '@material-ui/core';
 
+const useStyles = makeStyles((theme) => ({
+  mainNav: {
+    backgroundColor: theme.palette.background.default,
+  },
+  button: {
+    marginRight: theme.spacing(2),
+  },
+  logo: {
+    width: '90px',
+  },
+  logoWrap: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  avatar: {
+    width: '30px',
+    height: '30px',
+    fontSize: '20px',
+  },
+  userName: {
+    fontSize: '18px',
+  },
+}));
+
 const MainNav = () => {
   const classes = useStyles();
   const userLogin = useSelector((state: State) => state.userLogin);
@@ -50,7 +74,7 @@ const LogoutButtons = ({ userInfo }: { userInfo: UserInfo }) => {
   const handleLogout = () => {
     dispatch(storeUserLogout());
     history.push('/');
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
   };
 
   return (
@@ -92,27 +116,3 @@ const LoginButtons: React.FC = () => {
 };
 
 export default MainNav;
-
-const useStyles = makeStyles((theme) => ({
-  mainNav: {
-    backgroundColor: theme.palette.background.default,
-  },
-  button: {
-    marginRight: theme.spacing(2),
-  },
-  logo: {
-    width: '90px',
-  },
-  logoWrap: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  avatar: {
-    width: '30px',
-    height: '30px',
-    fontSize: '20px',
-  },
-  userName: {
-    fontSize: '18px',
-  },
-}));

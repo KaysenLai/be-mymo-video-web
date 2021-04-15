@@ -2,6 +2,7 @@ import { Action } from '../../../types';
 import {
   REQUEST_GOOGLE_USER_LOGIN,
   REQUEST_USER_LOGIN,
+  storeUserIsOAuth,
   storeUserLoginFail,
   storeUserLoginIsLoading,
   storeUserLoginSuccess,
@@ -16,7 +17,7 @@ export function* handleUserLogin(action: Action): any {
         yield put(storeUserLoginIsLoading(true));
         const { data } = yield call(axiosUserLogin, action.payload);
         yield put(storeUserLoginSuccess(data));
-        localStorage.setItem('user', JSON.stringify(data));
+        sessionStorage.setItem('user', JSON.stringify(data));
       } catch (err) {
         yield put(storeUserLoginFail(err.response.data.message));
       }
@@ -27,7 +28,8 @@ export function* handleUserLogin(action: Action): any {
         const { data } = yield call(axiosUserGoogleLogin, action.payload.GoogleLoginInfo);
         const user = { ...data, avatar: action.payload.avatar, token: action.payload.token };
         yield put(storeUserLoginSuccess(user));
-        localStorage.setItem('user', JSON.stringify(user));
+        yield put(storeUserIsOAuth(true));
+        sessionStorage.setItem('user', JSON.stringify(user));
       } catch (err) {
         yield put(storeUserLoginFail(err.response.data.message));
       }

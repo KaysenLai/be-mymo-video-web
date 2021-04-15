@@ -18,7 +18,7 @@ const auth = asyncHandler(async (req, res, next) => {
       const decodedData = jwt.decode(token);
       const user = await User.findOne({ email: decodedData.email });
       req.userId = user._id;
-      next();
+      return next();
     } catch (error) {
       res.status(403);
       throw new Error('Forbidden: unregistered user. ');

@@ -11,6 +11,7 @@ authAxios.interceptors.request.use((req) => {
   }
   return req;
 });
+export { authAxios };
 
 export const apiUserLogin = (): string => `${baseUrl}/user/login`;
 export const apiUserGoogleLogin = (): string => `${baseUrl}/user/googlelogin`;

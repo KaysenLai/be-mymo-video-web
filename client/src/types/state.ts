@@ -6,6 +6,7 @@ export interface State {
     isLoading: boolean;
     errorMessage: string;
     userInfo: UserInfo;
+    isOAuth: boolean;
   };
   userSignUp: {
     isLoading: boolean;

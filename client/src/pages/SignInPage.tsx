@@ -22,6 +22,56 @@ import { State } from '../types/state';
 import MyMessage from '../components/MyMessage';
 import Loading from '../components/Loading';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: '100vh',
+  },
+  image: {
+    backgroundRepeat: 'no-repeat',
+    backgroundColor: theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
+  box: {
+    margin: theme.spacing(8, 0),
+    [theme.breakpoints.up('xs')]: {
+      margin: theme.spacing(8, 4),
+    },
+    [theme.breakpoints.up('sm')]: {
+      margin: theme.spacing(8, 4),
+    },
+    [theme.breakpoints.up('md')]: {
+      margin: theme.spacing(8, 6),
+    },
+    [theme.breakpoints.up('lg')]: {
+      margin: theme.spacing(8, 8),
+    },
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  form: {
+    width: '100%',
+    marginTop: theme.spacing(4),
+  },
+  button: {
+    marginTop: '20px',
+  },
+  divider: {
+    width: '100%',
+    marginTop: '20px',
+  },
+  logo: {
+    width: '200px',
+  },
+  link: {
+    width: '100%',
+  },
+  googleBtnWrap: {
+    width: '100%',
+  },
+}));
+
 const SignInPage: React.FC = (props: any) => {
   const { history } = props;
   const classes = useStyles();
@@ -190,53 +240,3 @@ const SignInPage: React.FC = (props: any) => {
 };
 
 export default SignInPage;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: '100vh',
-  },
-  image: {
-    backgroundRepeat: 'no-repeat',
-    backgroundColor: theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  },
-  box: {
-    margin: theme.spacing(8, 0),
-    [theme.breakpoints.up('xs')]: {
-      margin: theme.spacing(8, 4),
-    },
-    [theme.breakpoints.up('sm')]: {
-      margin: theme.spacing(8, 4),
-    },
-    [theme.breakpoints.up('md')]: {
-      margin: theme.spacing(8, 6),
-    },
-    [theme.breakpoints.up('lg')]: {
-      margin: theme.spacing(8, 8),
-    },
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  form: {
-    width: '100%',
-    marginTop: theme.spacing(4),
-  },
-  button: {
-    marginTop: '20px',
-  },
-  divider: {
-    width: '100%',
-    marginTop: '20px',
-  },
-  logo: {
-    width: '200px',
-  },
-  link: {
-    width: '100%',
-  },
-  googleBtnWrap: {
-    width: '100%',
-  },
-}));

@@ -29,6 +29,57 @@ import MyMessage from '../components/MyMessage';
 import { SignUpInfo } from '../types';
 import { requestUserSignUp } from '../store/actions/userSignUp';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: '100vh',
+  },
+  image: {
+    backgroundRepeat: 'no-repeat',
+    backgroundColor: theme.palette.background.default,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
+  box: {
+    margin: theme.spacing(3, 0),
+    [theme.breakpoints.up('xs')]: {
+      margin: theme.spacing(4, 4),
+    },
+    [theme.breakpoints.up('sm')]: {
+      margin: theme.spacing(4, 4),
+    },
+    [theme.breakpoints.up('md')]: {
+      margin: theme.spacing(4, 6),
+    },
+    [theme.breakpoints.up('lg')]: {
+      margin: theme.spacing(4, 8),
+    },
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  form: {
+    width: '100%',
+    marginTop: theme.spacing(3),
+  },
+  button: {
+    marginTop: '20px',
+  },
+  logo: {
+    width: '200px',
+    marginTop: theme.spacing(2),
+  },
+  text: {
+    marginTop: theme.spacing(3),
+    color: theme.palette.grey[300],
+    transition: 'color 0.3s ease',
+    cursor: 'pointer',
+
+    '&:hover': {
+      color: theme.palette.primary.light,
+    },
+  },
+}));
+
 const SignUpPage: React.FC = (props: any) => {
   const classes = useStyles();
   const { history } = props;
@@ -293,54 +344,3 @@ const SignUpPage: React.FC = (props: any) => {
 };
 
 export default SignUpPage;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: '100vh',
-  },
-  image: {
-    backgroundRepeat: 'no-repeat',
-    backgroundColor: theme.palette.background.default,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  },
-  box: {
-    margin: theme.spacing(3, 0),
-    [theme.breakpoints.up('xs')]: {
-      margin: theme.spacing(4, 4),
-    },
-    [theme.breakpoints.up('sm')]: {
-      margin: theme.spacing(4, 4),
-    },
-    [theme.breakpoints.up('md')]: {
-      margin: theme.spacing(4, 6),
-    },
-    [theme.breakpoints.up('lg')]: {
-      margin: theme.spacing(4, 8),
-    },
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  form: {
-    width: '100%',
-    marginTop: theme.spacing(3),
-  },
-  button: {
-    marginTop: '20px',
-  },
-  logo: {
-    width: '200px',
-    marginTop: theme.spacing(2),
-  },
-  text: {
-    marginTop: theme.spacing(3),
-    color: theme.palette.grey[300],
-    transition: 'color 0.3s ease',
-    cursor: 'pointer',
-
-    '&:hover': {
-      color: theme.palette.primary.light,
-    },
-  },
-}));
