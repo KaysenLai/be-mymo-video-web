@@ -5,8 +5,8 @@ import axios from 'axios';
 const authAxios = axios.create({ baseURL: baseUrl });
 
 authAxios.interceptors.request.use((req) => {
-  if (localStorage.getItem('user')) {
-    const token = JSON.parse(<string>localStorage.getItem('user')).token;
+  if (sessionStorage.getItem('user')) {
+    const token = JSON.parse(sessionStorage.getItem('user') as string).token;
     req.headers.Authorization = `Bearer ${token}`;
   }
   return req;

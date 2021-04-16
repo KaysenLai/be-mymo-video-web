@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
   userName: {
     fontSize: '18px',
+    color: 'white',
   },
 }));
 
@@ -79,16 +80,20 @@ const LogoutButtons = ({ userInfo }: { userInfo: UserInfo }) => {
 
   return (
     <>
-      <Grid container justify="center" alignItems="center" spacing={2}>
-        <Grid item>
-          {userInfo.avatar === '' && <LetterAvatar className={classes.avatar} fullName={userInfo.name} />}
-          {userInfo.avatar.startsWith('http') && (
-            <Avatar alt={userInfo.name} className={classes.avatar} src={userInfo.avatar} />
-          )}
-        </Grid>
-        <Grid item>
-          <span className={classes.userName}>{userInfo.name}</span>
-        </Grid>
+      <Grid container justify="center" alignItems="center" spacing={6}>
+        <Link to="/profile">
+          <Grid container justify="center" alignItems="center" spacing={2}>
+            <Grid item>
+              {userInfo.avatar === '' && <LetterAvatar className={classes.avatar} fullName={userInfo.name} />}
+              {userInfo.avatar.startsWith('http') && (
+                <Avatar alt={userInfo.name} className={classes.avatar} src={userInfo.avatar} />
+              )}
+            </Grid>
+            <Grid item>
+              <span className={classes.userName}>{userInfo.name}</span>
+            </Grid>
+          </Grid>
+        </Link>
         <Grid item>
           <GhostButton size="small" onClick={handleLogout}>
             Log out

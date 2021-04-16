@@ -1,6 +1,15 @@
+import React from 'react';
+
 export interface Action<T = any> {
   type: string;
   payload?: T;
+}
+
+export interface RouteProps {
+  component: React.ComponentType<any>;
+  exact?: boolean;
+  path: string;
+  redirectTo?: string;
 }
 
 export interface UserInfo {

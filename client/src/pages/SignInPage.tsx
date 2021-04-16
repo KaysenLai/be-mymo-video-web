@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SignInPage: React.FC = (props: any) => {
-  const { history } = props;
+  const { history, location } = props;
   const classes = useStyles();
   const [randomImgUrl, setRandomImgUrl] = useState('');
   if (randomImgUrl === '') setRandomImgUrl(randomImg());
@@ -85,7 +85,13 @@ const SignInPage: React.FC = (props: any) => {
   const { isLoading, errorMessage, userInfo, isAuthenticated } = userLogin;
 
   useEffect(() => {
-    if (isAuthenticated) history.push('/');
+    const previousPath = location?.state?.redirect;
+    if (!isAuthenticated) return;
+    if (previousPath) {
+      history.push(previousPath);
+    } else {
+      history.push('/');
+    }
   }, [history, userInfo]);
 
   const handleSubmit = (e: any) => {

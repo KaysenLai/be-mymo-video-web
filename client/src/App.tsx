@@ -1,5 +1,5 @@
 import React from 'react';
-import HomePage from './pages/HomePage';
+import WithNavContainer from './pages/WithNavContainer';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import { Switch, Route } from 'react-router-dom';
@@ -7,9 +7,9 @@ import { Switch, Route } from 'react-router-dom';
 const App: React.FC = () => {
   return (
     <>
-      <Route exact path="/" component={HomePage} />
       <Route exact path="/signin" component={SignInPage} />
       <Route exact path="/signup" component={SignUpPage} />
+      <Route path="/" component={WithNavContainer} />
     </>
   );
 };
