@@ -6,7 +6,7 @@ function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function MyMessage({ msg, severity, ...rest }: any) {
+export default function MymoMessage({ msg, severity, ...rest }: any) {
   return (
     <Snackbar open={true} {...rest}>
       <Alert severity="error">{msg}</Alert>

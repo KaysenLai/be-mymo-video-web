@@ -25,7 +25,7 @@ import Typography from '@material-ui/core/Typography';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../types/state';
 import Loading from '../components/Loading';
-import MyMessage from '../components/MyMessage';
+import MymoMessage from '../components/MymoMessage';
 import { SignUpInfo } from '../types';
 import { requestUserSignUp } from '../store/actions/userSignUp';
 
@@ -210,7 +210,7 @@ const SignUpPage: React.FC = (props: any) => {
   return (
     <>
       <Loading isLoading={isLoading} />
-      {errorMessage !== '' && <MyMessage msg={errorMessage} severity="error" />}
+      {errorMessage !== '' && <MymoMessage msg={errorMessage} severity="error" />}
       <Grid container component="main" className={classes.root}>
         <Grid item xs={12} sm={8} md={6} lg={5}>
           <Box className={classes.box}>

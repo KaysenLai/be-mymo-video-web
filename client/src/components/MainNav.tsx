@@ -9,11 +9,10 @@ import logo from '../assets/img/MYMO_logo.svg';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../types/state';
-import LetterAvatar from './LetterAvatar';
 import { storeUserLogout } from '../store/actions/userLogin';
 import { useHistory } from 'react-router-dom';
 import { UserInfo } from '../types';
-import { Avatar } from '@material-ui/core';
+import MymoAvatar from './MymoAvatar';
 
 const useStyles = makeStyles((theme) => ({
   mainNav: {
@@ -84,10 +83,7 @@ const LogoutButtons = ({ userInfo }: { userInfo: UserInfo }) => {
         <Link to="/profile">
           <Grid container justify="center" alignItems="center" spacing={2}>
             <Grid item>
-              {userInfo.avatar === '' && <LetterAvatar className={classes.avatar} fullName={userInfo.name} />}
-              {userInfo.avatar.startsWith('http') && (
-                <Avatar alt={userInfo.name} className={classes.avatar} src={userInfo.avatar} />
-              )}
+              <MymoAvatar avatarSrc={userInfo.avatar} fullName={userInfo.name} className={classes.avatar} />
             </Grid>
             <Grid item>
               <span className={classes.userName}>{userInfo.name}</span>

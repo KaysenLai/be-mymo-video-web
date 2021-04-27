@@ -5,6 +5,7 @@ import auth from '../middlewares/authMiddleware.js';
 import userModel from '../models/userModel.js';
 
 router.get('/', async (req, res) => {
+  console.log(req.header);
   res.send('hello');
 });
 

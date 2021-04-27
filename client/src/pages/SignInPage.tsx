@@ -19,7 +19,7 @@ import {
   storeUserLoginIsLoading,
 } from '../store/actions/userLogin';
 import { State } from '../types/state';
-import MyMessage from '../components/MyMessage';
+import MymoMessage from '../components/MymoMessage';
 import Loading from '../components/Loading';
 
 const useStyles = makeStyles((theme) => ({
@@ -146,7 +146,7 @@ const SignInPage: React.FC = (props: any) => {
   return (
     <>
       <Loading isLoading={isLoading} />
-      {errorMessage !== '' && <MyMessage msg={errorMessage} severity="error" />}
+      {errorMessage !== '' && <MymoMessage msg={errorMessage} severity="error" />}
       <Grid container component="main" className={classes.root}>
         <Grid item xs={12} sm={8} md={6} lg={4}>
           <Box className={classes.box}>

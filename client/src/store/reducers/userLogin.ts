@@ -7,42 +7,7 @@ import {
   STORE_USER_LOGOUT,
 } from '../actions/userLogin';
 import initialState from '../initialState';
-import jwt from 'jsonwebtoken';
-
-const getLocalUser = () => {
-  const userLocal = JSON.parse(sessionStorage.getItem('user') as string);
-  if (!userLocal) return null;
-
-  const secret = process.env.REACT_APP_JWT_SECRET;
-  const token = userLocal.token;
-
-  try {
-    const isGoogleToken = token.length > 500;
-    let decoded;
-    if (isGoogleToken) {
-      decoded = jwt.decode(token);
-    } else {
-      decoded = secret && jwt.verify(userLocal.token, secret);
-    }
-
-    // @ts-ignore
-    const exp = decoded?.exp;
-    if (!exp) return null;
-
-    const isExpired = Date.now() - exp * 1000 > 0;
-    if (isExpired) return null;
-
-    return {
-      isAuthenticated: true,
-      isLoading: false,
-      errorMessage: '',
-      userInfo: userLocal,
-    };
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
-};
+import getLocalUser from '../../utils/getLocalUser';
 
 const userLoginState = getLocalUser() ? getLocalUser() : initialState.userLogin;
 
