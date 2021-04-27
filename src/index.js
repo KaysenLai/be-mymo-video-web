@@ -5,7 +5,6 @@ import userRoutes from './routes/userRoutes.js';
 import { errorHandler, notFoundHandler } from './middlewares/errorMiddleware.js';
 import connectDB from './config/mongoDB.js';
 import cors from 'cors';
-import path from 'path';
 
 dotenv.config();
 connectDB();
@@ -16,7 +15,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use('/api/user', userRoutes);
+app.use('/user', userRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
