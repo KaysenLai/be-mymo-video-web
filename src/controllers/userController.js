@@ -2,6 +2,8 @@ import asyncHandler from 'express-async-handler';
 import getToken from '../utils/getToken.js';
 import User from '../models/userModel.js';
 import getRandomPassword from '../utils/getRandomPassword.js';
+import mongoose from 'mongoose';
+const { ObjectId } = mongoose.Types;
 
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -71,8 +73,23 @@ const signup = asyncHandler(async (req, res) => {
   });
 });
 
+const myProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.userId).populate({ path: 'following', select: 'name avatar' });
+  return res.json(user);
+});
+
+const follow = asyncHandler(async (req, res) => {
+  const { followUserId } = req.query;
+
+  const user = await User.findByIdAndUpdate(req.userId, { $addToSet: { following: followUserId } });
+
+  return res.json(user);
+});
+
 export default {
   login,
   googleLogin,
   signup,
+  myProfile,
+  follow,
 };

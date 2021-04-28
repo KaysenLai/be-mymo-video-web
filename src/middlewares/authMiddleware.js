@@ -7,7 +7,7 @@ const auth = asyncHandler(async (req, res, next) => {
   const hasToken = authHeader && authHeader.startsWith('Bearer');
   if (!hasToken) {
     res.status(401);
-    throw new Error('Unauthorized: have no token');
+    throw new Error('Unauthorized: have no token.');
   }
 
   const token = req.headers.authorization.split(' ')[1];
@@ -21,7 +21,7 @@ const auth = asyncHandler(async (req, res, next) => {
       return next();
     } catch (error) {
       res.status(403);
-      throw new Error('Forbidden: unregistered user. ');
+      throw new Error('Forbidden: unregistered user.');
     }
   }
 
