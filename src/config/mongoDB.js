@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const connectDB = async () => {
+  mongoose.set('useFindAndModify', false);
   try {
     await mongoose.connect(process.env.MONGODB_KEY, {
       useUnifiedTopology: true,

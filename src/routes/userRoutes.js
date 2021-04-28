@@ -12,6 +12,7 @@ router.get('/', async (req, res) => {
 
 router.get('/myprofile', auth, user.myProfile);
 router.get('/follow', auth, user.follow);
+router.get('/unfollow', auth, user.unfollow);
 router.post('/login', user.login);
 router.post('/googlelogin', user.googleLogin);
 router.post('/signup', user.signup);

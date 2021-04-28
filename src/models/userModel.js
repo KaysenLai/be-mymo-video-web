@@ -3,6 +3,8 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
+const opts = { toJSON: { virtuals: true }, timestamps: true };
+
 const userSchema = mongoose.Schema(
   {
     name: {
@@ -17,6 +19,7 @@ const userSchema = mongoose.Schema(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     avatar: {
       type: String,
@@ -35,9 +38,7 @@ const userSchema = mongoose.Schema(
       },
     ],
   },
-  {
-    timestamps: true,
-  },
+  opts,
 );
 
 userSchema.pre('save', async function (next) {
@@ -46,6 +47,14 @@ userSchema.pre('save', async function (next) {
 
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
+});
+
+userSchema.virtual('followingNum').get(function () {
+  return this.following.length;
+});
+
+userSchema.virtual('followerNum').get(function () {
+  return this.follower.length;
 });
 
 userSchema.methods.comparePassword = function (enteredPassword) {

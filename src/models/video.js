@@ -6,9 +6,11 @@ const videoSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    tags: {
-      type: String,
-    },
+    tags: [
+      {
+        type: String,
+      },
+    ],
     author: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

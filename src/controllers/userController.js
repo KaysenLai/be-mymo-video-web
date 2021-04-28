@@ -74,16 +74,26 @@ const signup = asyncHandler(async (req, res) => {
 });
 
 const myProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.userId).populate({ path: 'following', select: 'name avatar' });
+  const user = await User.findById(req.userId).populate({ path: 'following', select: 'name following follower' });
   return res.json(user);
 });
 
 const follow = asyncHandler(async (req, res) => {
   const { followUserId } = req.query;
+  const userId = req.userId;
+  const user = await User.findByIdAndUpdate(userId, { $addToSet: { following: new ObjectId(followUserId) } });
+  const followUser = await User.findByIdAndUpdate(followUserId, { $addToSet: { follower: new ObjectId(userId) } });
 
-  const user = await User.findByIdAndUpdate(req.userId, { $addToSet: { following: followUserId } });
+  return res.json({ message: `${user.name} follows ${followUser.name} successfully.` });
+});
 
-  return res.json(user);
+const unfollow = asyncHandler(async (req, res) => {
+  const { unfollowUserId } = req.query;
+  const userId = req.userId;
+  const user = await User.findByIdAndUpdate(userId, { $pull: { following: new ObjectId(unfollowUserId) } });
+  const unfollowUser = await User.findByIdAndUpdate(unfollowUserId, { $pull: { follower: new ObjectId(userId) } });
+
+  return res.json({ message: `${user.name} unfollows ${unfollowUser.name} successfully.` });
 });
 
 export default {
@@ -92,4 +102,5 @@ export default {
   signup,
   myProfile,
   follow,
+  unfollow,
 };
