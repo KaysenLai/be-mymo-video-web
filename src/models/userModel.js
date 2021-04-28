@@ -3,43 +3,58 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-const opts = { toJSON: { virtuals: true }, timestamps: true };
-
-const userSchema = mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-      select: false,
-    },
-    avatar: {
-      type: String,
-      default: '',
-    },
-    following: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-      },
-    ],
-    follower: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-      },
-    ],
+const userSchema = mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
   },
-  opts,
-);
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    select: false,
+  },
+  avatar: {
+    type: String,
+    default: '',
+  },
+  following: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+  follower: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+  followingNum: {
+    type: Number,
+    default: 0,
+  },
+  followerNum: {
+    type: Number,
+    default: 0,
+  },
+  video: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Video',
+    },
+  ],
+  likeVideo: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Video',
+    },
+  ],
+});
 
 userSchema.pre('save', async function (next) {
   const user = this;
@@ -47,14 +62,6 @@ userSchema.pre('save', async function (next) {
 
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
-});
-
-userSchema.virtual('followingNum').get(function () {
-  return this.following.length;
-});
-
-userSchema.virtual('followerNum').get(function () {
-  return this.follower.length;
 });
 
 userSchema.methods.comparePassword = function (enteredPassword) {

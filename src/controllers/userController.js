@@ -7,13 +7,14 @@ const { ObjectId } = mongoose.Types;
 
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select('+password');
 
   if (!user) {
     return res.status(401).send({ message: "The user doesn't exist." });
   }
 
   const isRightPassword = await user.comparePassword(password);
+
   if (isRightPassword) {
     return res.status(200).json({
       _id: user._id,
@@ -74,7 +75,10 @@ const signup = asyncHandler(async (req, res) => {
 });
 
 const myProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.userId).populate({ path: 'following', select: 'name following follower' });
+  const user = await User.findById(req.userId).populate({
+    path: 'following follower',
+    select: 'name following follower avatar',
+  });
   return res.json(user);
 });
 
