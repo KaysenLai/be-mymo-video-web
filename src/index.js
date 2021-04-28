@@ -6,7 +6,6 @@ import { errorHandler, notFoundHandler } from './middlewares/errorMiddleware.js'
 import connectDB from './config/mongoDB.js';
 import cors from 'cors';
 
-dotenv.config();
 connectDB();
 
 const app = express();

@@ -3,6 +3,8 @@ const router = express.Router();
 import user from '../controllers/userController.js';
 import auth from '../middlewares/authMiddleware.js';
 import userModel from '../models/userModel.js';
+import s3MiddleWare from '../middlewares/s3Avatar.js';
+import upload from '../middlewares/multer.js';
 
 router.get('/', async (req, res) => {
   console.log(req.headers);
@@ -16,6 +18,7 @@ router.get('/unfollow', auth, user.unfollow);
 router.post('/login', user.login);
 router.post('/googlelogin', user.googleLogin);
 router.post('/signup', user.signup);
+router.post('/avatar', auth, upload.single('avatar'), s3MiddleWare, user.avatar);
 
 router.get('/token', auth, async (req, res) => {
   const userId = await userModel.findById(req?.userId);

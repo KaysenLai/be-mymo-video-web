@@ -77,7 +77,7 @@ const signup = asyncHandler(async (req, res) => {
 const myProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.userId).populate({
     path: 'following follower',
-    select: 'name following follower avatar',
+    select: 'name avatar followerNum',
   });
   return res.json(user);
 });
@@ -121,6 +121,11 @@ const unfollow = asyncHandler(async (req, res) => {
   return res.json({ message: 'Update unfollowing successfully.' });
 });
 
+const avatar = asyncHandler(async (req, res) => {
+  await User.findByIdAndUpdate(req.userId, { $set: { avatar: req.avatarUrl } });
+  return res.json({ message: 'Update user avatar successfully.' });
+});
+
 export default {
   login,
   googleLogin,
@@ -128,4 +133,5 @@ export default {
   myProfile,
   follow,
   unfollow,
+  avatar,
 };
