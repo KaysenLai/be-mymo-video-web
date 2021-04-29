@@ -14,23 +14,30 @@ const s3 = new AWS.S3({
 
 const s3Avatar = asyncHandler(async (req, res, next) => {
   const file = req.file;
-  const avatarName = `${uuid()}.jpg`;
 
-  const params = {
-    Bucket: AWS_AVATAR_BUCKET,
-    Key: avatarName,
-    Body: file.buffer,
-    ContentType: 'image/jpeg',
-  };
+  if (file === undefined) {
+    req.avatarUrl = undefined;
+    await next();
+  }
 
-  await new Promise((resolve) => {
-    s3.upload(params, async (error, data) => {
-      req.avatarUrl = data.Location;
-      resolve();
+  if (file !== undefined) {
+    const avatarName = `${uuid()}.jpg`;
+    const params = {
+      Bucket: AWS_AVATAR_BUCKET,
+      Key: avatarName,
+      Body: file.buffer,
+      ContentType: 'image/jpeg',
+    };
+
+    await new Promise((resolve) => {
+      s3.upload(params, async (error, data) => {
+        req.avatarUrl = data.Location;
+        resolve();
+      });
     });
-  });
 
-  await next();
+    await next();
+  }
 });
 
 export default s3Avatar;

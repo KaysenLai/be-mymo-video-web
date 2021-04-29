@@ -119,9 +119,19 @@ const unfollow = asyncHandler(async (req, res) => {
   return res.json({ message: 'Update unfollowing successfully.' });
 });
 
-const avatar = asyncHandler(async (req, res) => {
-  const user = await User.findByIdAndUpdate(req.userId, { $set: { avatar: req.avatarUrl } }, { new: true });
-  return res.json(getUserInfo(user));
+const update = asyncHandler(async (req, res) => {
+  const avatar = req.avatarUrl;
+  const { name, description } = req.body;
+
+  if (typeof avatar === 'string') {
+    const update = { name, description, avatar: req.avatarUrl };
+    await User.findByIdAndUpdate(req.userId, { $set: update }, { new: true });
+  } else {
+    const update = { name, description };
+    await User.findByIdAndUpdate(req.userId, { $set: update }, { new: true });
+  }
+
+  return res.json({ message: 'Update user info successfully' });
 });
 
 export default {
@@ -131,5 +141,5 @@ export default {
   myProfile,
   follow,
   unfollow,
-  avatar,
+  update,
 };
