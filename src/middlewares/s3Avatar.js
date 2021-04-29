@@ -14,9 +14,7 @@ const s3 = new AWS.S3({
 
 const s3Avatar = asyncHandler(async (req, res, next) => {
   const file = req.file;
-  const myFile = file.originalname.split('.');
-  const fileType = myFile[myFile.length - 1];
-  const avatarName = `${uuid()}.${fileType}`;
+  const avatarName = `${uuid()}.jpg`;
 
   const params = {
     Bucket: AWS_AVATAR_BUCKET,

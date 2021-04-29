@@ -5,6 +5,14 @@ import getRandomPassword from '../utils/getRandomPassword.js';
 import mongoose from 'mongoose';
 const { ObjectId } = mongoose.Types;
 
+const getUserInfo = (user) => ({
+  _id: user._id,
+  name: user.name,
+  email: user.email,
+  avatar: user.avatar,
+  token: getToken(user._id),
+});
+
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email }).select('+password');
@@ -16,20 +24,14 @@ const login = asyncHandler(async (req, res) => {
   const isRightPassword = await user.comparePassword(password);
 
   if (isRightPassword) {
-    return res.status(200).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-      token: getToken(user._id),
-    });
+    return res.status(200).json(getUserInfo(user));
   } else {
     return res.status(401).send({ message: 'The password is incorrect.' });
   }
 });
 
 const googleLogin = asyncHandler(async (req, res) => {
-  const { email, name } = req.body;
+  const { email, name, avatar } = req.body;
   const user = await User.findOne({ email });
 
   if (user) {
@@ -37,17 +39,19 @@ const googleLogin = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      avatar: user.avatar,
     });
   }
 
   if (!user) {
     const password = getRandomPassword();
-    const user = new User({ name, email, password });
+    const user = new User({ name, email, password, avatar });
     await user.save();
     return res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      avatar: user.avatar,
     });
   }
 
@@ -65,13 +69,7 @@ const signup = asyncHandler(async (req, res) => {
   const user = new User({ name, email, password });
   await user.save();
 
-  res.status(201).json({
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    avatar: user.avatar,
-    token: getToken(user._id),
-  });
+  res.status(201).json(getUserInfo(user));
 });
 
 const myProfile = asyncHandler(async (req, res) => {
@@ -122,8 +120,8 @@ const unfollow = asyncHandler(async (req, res) => {
 });
 
 const avatar = asyncHandler(async (req, res) => {
-  await User.findByIdAndUpdate(req.userId, { $set: { avatar: req.avatarUrl } });
-  return res.json({ message: 'Update user avatar successfully.' });
+  const user = await User.findByIdAndUpdate(req.userId, { $set: { avatar: req.avatarUrl } }, { new: true });
+  return res.json(getUserInfo(user));
 });
 
 export default {

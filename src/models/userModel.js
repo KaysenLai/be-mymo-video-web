@@ -22,6 +22,10 @@ const userSchema = mongoose.Schema({
     type: String,
     default: '',
   },
+  description: {
+    type: String,
+    default: '',
+  },
   following: [
     {
       type: mongoose.Schema.Types.ObjectId,

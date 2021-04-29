@@ -18,7 +18,7 @@ router.get('/unfollow', auth, user.unfollow);
 router.post('/login', user.login);
 router.post('/googlelogin', user.googleLogin);
 router.post('/signup', user.signup);
-router.post('/avatar', auth, upload.single('avatar'), s3MiddleWare, user.avatar);
+router.put('/', auth, upload.single('avatar'), s3MiddleWare, user.avatar);
 
 router.get('/token', auth, async (req, res) => {
   const userId = await userModel.findById(req?.userId);
