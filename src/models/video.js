@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const videoSchema = mongoose.Schema(
   {
-    title: {
+    description: {
       type: String,
       required: true,
     },
@@ -11,12 +11,15 @@ const videoSchema = mongoose.Schema(
         type: String,
       },
     ],
+    cover: { type: String, required: true },
+    video: { type: String },
     author: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'User',
     },
-    users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    comment: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
+    like: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   },
   {
     timestamps: true,
