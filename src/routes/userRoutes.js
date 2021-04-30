@@ -6,6 +6,7 @@ import userModel from '../models/userModel.js';
 import upload from '../middlewares/multer.js';
 import s3Avatar from '../middlewares/s3Avatar.js';
 import transporter from '../utils/mailer.js';
+import User from '../models/userModel.js';
 
 router.get('/myprofile', auth, user.myProfile);
 router.put('/follow', auth, user.follow);

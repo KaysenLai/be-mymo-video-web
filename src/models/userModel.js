@@ -18,6 +18,11 @@ const userSchema = mongoose.Schema({
     required: true,
     select: false,
   },
+  isVerified: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   avatar: {
     type: String,
     default: '',
