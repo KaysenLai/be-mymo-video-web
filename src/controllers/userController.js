@@ -65,13 +65,14 @@ const signup = asyncHandler(async (req, res) => {
 const myProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.userId).populate({
     path: 'following follower',
-    select: 'name avatar followerNum',
+    select: 'name avatar followerNum description',
   });
   return res.json(user);
 });
 
 const follow = asyncHandler(async (req, res) => {
-  const { followUserId } = req.query;
+  const { followUserId } = req.body;
+  console.log(followUserId);
   const userId = req.userId;
   const updateUser = await User.updateOne({ _id: userId }, { $addToSet: { following: new ObjectId(followUserId) } });
 
@@ -92,7 +93,7 @@ const follow = asyncHandler(async (req, res) => {
 });
 
 const unfollow = asyncHandler(async (req, res) => {
-  const { unFollowUserId } = req.query;
+  const { unFollowUserId } = req.body;
   const userId = req.userId;
   const updateUser = await User.updateOne({ _id: userId }, { $pull: { following: new ObjectId(unFollowUserId) } });
 
@@ -124,6 +125,43 @@ const update = asyncHandler(async (req, res) => {
   return res.json({ message: 'Update user info successfully' });
 });
 
+const getAllUser = asyncHandler(async (req, res) => {
+  const allUser = await User.find({}).sort({ createAt: -1 });
+  return res.json(allUser);
+});
+
+const getByID = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  const reqUserId = req.headers['x-userid'];
+
+  const user = await User.findById(userId).populate({
+    path: 'following follower',
+    select: 'name avatar followerNum description',
+  });
+  const query = await User.aggregate([
+    {
+      $match: {
+        _id: new ObjectId(userId),
+      },
+    },
+    {
+      $project: {
+        isFollowing: {
+          $in: [new ObjectId(reqUserId), '$follower'],
+        },
+        isMyself: {
+          $eq: [new ObjectId(reqUserId), new ObjectId(userId)],
+        },
+      },
+    },
+  ]);
+  const { isFollowing, isMyself } = query[0];
+  let userObj = user.toObject();
+  userObj.isFollowing = isFollowing;
+  userObj.isMyself = isMyself;
+  return res.json(userObj);
+});
+
 export default {
   login,
   googleLogin,
@@ -132,4 +170,6 @@ export default {
   follow,
   unfollow,
   update,
+  getAllUser,
+  getByID,
 };
