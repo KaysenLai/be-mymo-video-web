@@ -3,6 +3,9 @@ import getToken from '../utils/getToken.js';
 import User from '../models/userModel.js';
 import getRandomPassword from '../utils/getRandomPassword.js';
 import mongoose from 'mongoose';
+import transporter from '../utils/mailer.js';
+import jwt from 'jsonwebtoken';
+import config from '../config/app.js';
 const { ObjectId } = mongoose.Types;
 
 const getUserInfo = (user) => ({
@@ -40,7 +43,7 @@ const googleLogin = asyncHandler(async (req, res) => {
 
   if (!user) {
     const password = getRandomPassword();
-    const user = new User({ name, email, password, avatar });
+    const user = new User({ name, email, password, avatar, isVerified: true });
     await user.save();
     return res.status(201).json({ token: getToken(user._id) });
   }
@@ -50,40 +53,6 @@ const googleLogin = asyncHandler(async (req, res) => {
 
 const signup = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-
-  // const user = new accountCollection({ ...ctx.request.body, status: 'verified' });
-  //
-  // const mailCreator = (user, link) => ({
-  //   from: '"Easy Grade" <easy.grade.mailer@gmail.com>',
-  //   to: email,
-  //   subject: 'Verification',
-  //   html: `Hi,${name}
-  //    please click the link to activate your account.
-  //    Link:<a href=${link}>${link}<a/>`,
-  // });
-
-  // try {
-  //   const res = await user.save();
-  //   const now = new Date();
-  //   const expireDate = new Date(now.setMinutes(now.getMinutes() + 15));
-  //   const notification = new Notification({ accountEmail: accountEmail, expired: expireDate });
-  //   const notiRes = await notification.save();
-  //
-  //   const verifyLink = `http://easy-grade.com:8000/verify/${notiRes._id}`;
-  //   const transporter = nodemailer.createTransport(transportConfig);
-  //   const mailRes = await transporter.sendMail(mailCreator(ctx.request.body, verifyLink));
-  //   console.log(mailRes);
-  //   ctx.status = 201;
-  //   ctx.body = { msg: `Verficiation email has sent to ${accountEmail}` };
-  // } catch (err) {
-  //   if (err && err.message && err.message.startsWith('E11000 duplicate key error')) {
-  //     ctx.status = 403;
-  //     ctx.body = { msg: `This email has existed` };
-  //   } else {
-  //     throw err;
-  //   }
-  // }
-
   const hasUser = await User.findOne({ email });
   if (hasUser) {
     return res.status(401).send({ message: 'The user has already existed.' });
@@ -92,7 +61,32 @@ const signup = asyncHandler(async (req, res) => {
   const user = new User({ name, email, password });
   await user.save();
 
+  // const token = getToken(user._id);
+  // const verifyLink = `http://localhost:8000/user/verify/${token}`;
+  // const info = await transporter.sendMail({
+  //   from: 'Email Verification from mymo <mymo@gmail.com>',
+  //   to: 'chaokai.lai@gmail.com',
+  //   subject: 'Hello ✔',
+  //   html: `Hi,${user.accountName}
+  //           please click the link to activate your account.
+  //           Link:<p href=${verifyLink}>${verifyLink}<a/><br><p>This link will be expired in 1h.</p>`,
+  // });
+
   res.status(201).json({ token: getToken(user._id) });
+});
+
+const verify = asyncHandler(async (req, res) => {
+  const { token } = req.params;
+  console.log(token);
+  try {
+    const decodedData = jwt.verify(token, config.JWT_SECRET);
+    await User.findByIdAndUpdate(decodedData.id, { $set: { isVerified: true } });
+    req.status(200).json({ message: 'Verify email successfully.' });
+  } catch (error) {
+    res.status(403);
+    throw new Error('Forbidden: invalid token or expired token ');
+  }
+  res.status(201).json({ message: 'Verification email has been sent.' });
 });
 
 const myProfile = asyncHandler(async (req, res) => {
@@ -105,7 +99,6 @@ const myProfile = asyncHandler(async (req, res) => {
 
 const follow = asyncHandler(async (req, res) => {
   const { followUserId } = req.body;
-  console.log(followUserId);
   const userId = req.userId;
   const updateUser = await User.updateOne({ _id: userId }, { $addToSet: { following: new ObjectId(followUserId) } });
 
@@ -205,4 +198,5 @@ export default {
   update,
   getAllUser,
   getByID,
+  verify,
 };

@@ -10,4 +10,5 @@ export default {
   BASE_URL: (process.env.NODE_ENV = 'development' ? 'http://localhost:3000' : 'https://mymo.chaokai.me'),
   EMAIL: process.env.EMAIL,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+  JWT_SECRET: process.env.JWT_SECRET,
 };

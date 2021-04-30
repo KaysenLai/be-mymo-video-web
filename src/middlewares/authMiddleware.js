@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
+import config from '../config/app.js';
 
 const auth = asyncHandler(async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -26,7 +27,7 @@ const auth = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    const decodedData = jwt.verify(token, process.env.JWT_SECRET);
+    const decodedData = jwt.verify(token, config.JWT_SECRET);
     const user = await User.findById(decodedData.id);
     req.userId = user._id;
     next();
