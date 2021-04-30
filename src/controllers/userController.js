@@ -51,6 +51,39 @@ const googleLogin = asyncHandler(async (req, res) => {
 const signup = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 
+  // const user = new accountCollection({ ...ctx.request.body, status: 'verified' });
+  //
+  // const mailCreator = (user, link) => ({
+  //   from: '"Easy Grade" <easy.grade.mailer@gmail.com>',
+  //   to: email,
+  //   subject: 'Verification',
+  //   html: `Hi,${name}
+  //    please click the link to activate your account.
+  //    Link:<a href=${link}>${link}<a/>`,
+  // });
+
+  // try {
+  //   const res = await user.save();
+  //   const now = new Date();
+  //   const expireDate = new Date(now.setMinutes(now.getMinutes() + 15));
+  //   const notification = new Notification({ accountEmail: accountEmail, expired: expireDate });
+  //   const notiRes = await notification.save();
+  //
+  //   const verifyLink = `http://easy-grade.com:8000/verify/${notiRes._id}`;
+  //   const transporter = nodemailer.createTransport(transportConfig);
+  //   const mailRes = await transporter.sendMail(mailCreator(ctx.request.body, verifyLink));
+  //   console.log(mailRes);
+  //   ctx.status = 201;
+  //   ctx.body = { msg: `Verficiation email has sent to ${accountEmail}` };
+  // } catch (err) {
+  //   if (err && err.message && err.message.startsWith('E11000 duplicate key error')) {
+  //     ctx.status = 403;
+  //     ctx.body = { msg: `This email has existed` };
+  //   } else {
+  //     throw err;
+  //   }
+  // }
+
   const hasUser = await User.findOne({ email });
   if (hasUser) {
     return res.status(401).send({ message: 'The user has already existed.' });
