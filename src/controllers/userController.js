@@ -152,8 +152,15 @@ const update = asyncHandler(async (req, res) => {
 });
 
 const getAllUser = asyncHandler(async (req, res) => {
-  const allUser = await User.find({}).sort({ createAt: -1 });
+  const allUser = await User.find({}).sort({ followerNum: -1 });
   return res.json(allUser);
+});
+
+const searchUser = asyncHandler(async (req, res) => {
+  const searchText = req.query.searchText || '';
+  const searchTextReg = new RegExp(searchText, 'i');
+  const searchedUsers = await User.find({ name: searchTextReg }).sort({ followerNum: -1 });
+  return res.json(searchedUsers);
 });
 
 const getByID = asyncHandler(async (req, res) => {
@@ -199,4 +206,5 @@ export default {
   getAllUser,
   getByID,
   verify,
+  searchUser,
 };
