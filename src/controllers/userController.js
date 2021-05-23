@@ -24,6 +24,10 @@ const login = asyncHandler(async (req, res) => {
     return res.status(401).send({ message: "The user doesn't exist." });
   }
 
+  if (user.isVerified === false) {
+    return res.status(401).send({ message: 'Please verify your email.' });
+  }
+
   const isRightPassword = await user.comparePassword(password);
 
   if (isRightPassword) {
@@ -61,27 +65,27 @@ const signup = asyncHandler(async (req, res) => {
   const user = new User({ name, email, password });
   await user.save();
 
-  // const token = getToken(user._id);
-  // const verifyLink = `http://localhost:8000/user/verify/${token}`;
-  // const info = await transporter.sendMail({
-  //   from: 'Email Verification from mymo <mymo@gmail.com>',
-  //   to: 'chaokai.lai@gmail.com',
-  //   subject: 'Hello ✔',
-  //   html: `Hi,${user.accountName}
-  //           please click the link to activate your account.
-  //           Link:<p href=${verifyLink}>${verifyLink}<a/><br><p>This link will be expired in 1h.</p>`,
-  // });
+  const token = getToken(user._id);
+  const verifyLink = `http://localhost:8000/user/verify/${token}`;
+  const info = await transporter.sendMail({
+    from: 'Email Verification from mymo <mymo@gmail.com>',
+    to: 'chaokai.lai@gmail.com',
+    subject: 'Hello ✔',
+    html: `Hi,${user.accountName}
+            please click the link to activate your account.
+            Link:<p href=${verifyLink}>${verifyLink}<a/><br><p>This link will be expired in 1h.</p>`,
+  });
 
   res.status(201).json({ token: getToken(user._id) });
 });
 
 const verify = asyncHandler(async (req, res) => {
   const { token } = req.params;
-  console.log(token);
+
   try {
     const decodedData = jwt.verify(token, config.JWT_SECRET);
     await User.findByIdAndUpdate(decodedData.id, { $set: { isVerified: true } });
-    req.status(200).json({ message: 'Verify email successfully.' });
+    res.status(200).json({ message: 'Verify email successfully.' });
   } catch (error) {
     res.status(403);
     throw new Error('Forbidden: invalid token or expired token ');
