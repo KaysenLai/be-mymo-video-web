@@ -1,17 +1,43 @@
 import asyncHandler from 'express-async-handler';
-import getToken from '../utils/getToken.js';
-import User from '../models/userModel.js';
-import getRandomPassword from '../utils/getRandomPassword.js';
+import Video from '../models/videoModel.js';
 
-const getVideoById = asyncHandler(async (req, res) => {
-  const { videoId } = req.params;
+const getAll = asyncHandler(async (req, res) => {
+  const videos = await Video.find({}).populate({
+    path: 'author',
+    select: 'name avatar followerNum',
+  });
+  res.json(videos);
 });
 
-const createVideo = asyncHandler(async (req, res) => {
-  const { videoId } = req.body;
+const getById = asyncHandler(async (req, res) => {
+  const { videoId } = req.params;
+  const video = await Video.findById(videoId).populate({
+    path: 'author',
+    select: 'name avatar',
+  });
+  res.json(video);
+});
+
+const create = asyncHandler(async (req, res) => {
+  const userId = req.userId;
+  const { description } = req.body;
+  const video = new Video({ description, author: userId });
+  await video.save();
+  res.json({ message: 'Save the video successfully.' });
+});
+
+const comment = asyncHandler(async (req, res) => {
+  const userId = req.userId;
+  const { videoId, text } = req.body;
+  const comment = { user: userId, text, time: Date.now() };
+  const video = await Video.findByIdAndUpdate(videoId, { $push: { comment } });
+
+  res.json({ message: 'Save the comment successfully.' });
 });
 
 export default {
-  getVideoById,
-  createVideo,
+  getAll,
+  getById,
+  create,
+  comment,
 };

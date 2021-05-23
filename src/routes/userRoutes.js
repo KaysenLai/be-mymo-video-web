@@ -1,10 +1,11 @@
 import express from 'express';
-const router = express.Router();
 import user from '../controllers/userController.js';
 import auth from '../middlewares/authMiddleware.js';
 import userModel from '../models/userModel.js';
 import upload from '../middlewares/multer.js';
 import s3Avatar from '../middlewares/s3Avatar.js';
+
+const router = express.Router();
 
 router.get('/myprofile', auth, user.myProfile);
 router.put('/follow', auth, user.follow);

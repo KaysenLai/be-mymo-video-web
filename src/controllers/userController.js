@@ -24,7 +24,7 @@ const login = asyncHandler(async (req, res) => {
   const isRightPassword = await user.comparePassword(password);
 
   if (isRightPassword) {
-    return res.status(200).json({ token: getToken(user._id, '1h') });
+    return res.status(200).json({ token: getToken(user._id, '15d') });
   } else {
     return res.status(401).send({ message: 'The password is incorrect.' });
   }

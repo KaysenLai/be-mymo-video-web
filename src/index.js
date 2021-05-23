@@ -1,10 +1,11 @@
 import express from 'express';
 import config from './config/app.js';
 import userRoutes from './routes/userRoutes.js';
+
 import { errorHandler, notFoundHandler } from './middlewares/errorMiddleware.js';
 import connectDB from './config/mongoDB.js';
 import cors from 'cors';
-
+import videoRoutes from './routes/videoRouters.js';
 connectDB();
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use('/user', userRoutes);
+app.use('/video', videoRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
