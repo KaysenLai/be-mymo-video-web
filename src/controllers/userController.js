@@ -73,7 +73,7 @@ const signup = asyncHandler(async (req, res) => {
   };
 
   if (existUser && existUser.isVerified === false) {
-    sendEmail(existUseruser.toObject());
+    sendEmail(existUser.toObject());
     return;
   }
   const user = new User({ name, email, password });
