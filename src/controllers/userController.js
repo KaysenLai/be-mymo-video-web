@@ -54,15 +54,15 @@ const signup = asyncHandler(async (req, res) => {
   if (existUser && existUser.isVerified === true) {
     return res.status(401).send({ message: 'The user has already existed.' });
   }
-  const sendEmail = async () => {
-    const token = getToken(existUser._id, '15m');
+  const sendEmail = async (user) => {
+    const token = getToken(user._id, '15m');
     const verifyLink = `${config.BASE_URL}/verify/${token}`;
     try {
       const info = await transporter.sendMail({
         from: 'Email Verification from mymo <mymo@gmail.com>',
         to: email,
         subject: '✔ Verification email form MyMo ',
-        html: `Hi,${name}
+        html: `Hi,${user.name}
             please click the link to activate your account.
             Link:<p href=${verifyLink}>${verifyLink}<a/><br><p>This link will be expired in 15 minutes.</p>`,
       });
@@ -73,11 +73,12 @@ const signup = asyncHandler(async (req, res) => {
   };
 
   if (existUser && existUser.isVerified === false) {
-    sendEmail();
+    sendEmail(existUseruser.toObject());
+    return;
   }
   const user = new User({ name, email, password });
   await user.save();
-  sendEmail();
+  sendEmail(user.toObject());
 });
 
 const verify = asyncHandler(async (req, res) => {
@@ -86,12 +87,11 @@ const verify = asyncHandler(async (req, res) => {
   try {
     const decodedData = jwt.verify(token, config.JWT_SECRET);
     await User.findByIdAndUpdate(decodedData.id, { $set: { isVerified: true } });
-    res.status(200).json({ message: 'Verify email successfully.' });
+    return res.status(200).json({ message: 'Verify email successfully.' });
   } catch (error) {
     res.status(403);
     throw new Error('Forbidden: invalid token or expired token ');
   }
-  res.status(201).json({ message: 'Verification email has been sent.' });
 });
 
 const forget = asyncHandler(async (req, res) => {
@@ -106,9 +106,9 @@ const forget = asyncHandler(async (req, res) => {
   const resetLink = `${config.BASE_URL}/reset/${token}`;
   try {
     const info = await transporter.sendMail({
-      from: 'Reset your password <mymo@gmail.com>',
+      from: 'Reset password from MyMo <mymo@gmail.com>',
       to: email,
-      subject: '✔ Reset your password form MyMo ',
+      subject: '✔ Reset password form MyMo ',
       html: `Hi,${existUser.name}
             please click the link to reset your password.
             Link:<p href=${resetLink}>${resetLink}<a/><br><p>This link will be expired in 15 minutes.</p>`,
