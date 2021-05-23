@@ -15,6 +15,8 @@ router.post('/signup', user.signup);
 router.put('/', auth, upload.single('avatar'), s3Avatar, user.update);
 router.get('/', user.getAllUser);
 router.get('/verify/:token', user.verify);
+router.get('/forget/:email', user.forget);
+router.post('/reset', user.reset);
 router.get('/search', user.searchUser);
 router.get('/:userId', user.getByID);
 

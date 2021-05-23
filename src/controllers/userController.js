@@ -6,15 +6,8 @@ import mongoose from 'mongoose';
 import transporter from '../utils/mailer.js';
 import jwt from 'jsonwebtoken';
 import config from '../config/app.js';
+import bcrypt from 'bcryptjs';
 const { ObjectId } = mongoose.Types;
-
-const getUserInfo = (user) => ({
-  _id: user._id,
-  name: user.name,
-  email: user.email,
-  avatar: user.avatar,
-  token: getToken(user._id),
-});
 
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -31,7 +24,7 @@ const login = asyncHandler(async (req, res) => {
   const isRightPassword = await user.comparePassword(password);
 
   if (isRightPassword) {
-    return res.status(200).json({ token: getToken(user._id) });
+    return res.status(200).json({ token: getToken(user._id, '1h') });
   } else {
     return res.status(401).send({ message: 'The password is incorrect.' });
   }
@@ -42,14 +35,14 @@ const googleLogin = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user) {
-    return res.status(200).json({ token: getToken(user._id) });
+    return res.status(200).json({ token: getToken(user._id, '1h') });
   }
 
   if (!user) {
     const password = getRandomPassword();
     const user = new User({ name, email, password, avatar, isVerified: true });
     await user.save();
-    return res.status(201).json({ token: getToken(user._id) });
+    return res.status(201).json({ token: getToken(user._id, '1h') });
   }
 
   res.status(401).send({ message: 'Google login failed.' });
@@ -57,26 +50,34 @@ const googleLogin = asyncHandler(async (req, res) => {
 
 const signup = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  const hasUser = await User.findOne({ email });
-  if (hasUser) {
+  const existUser = await User.findOne({ email });
+  if (existUser && existUser.isVerified === true) {
     return res.status(401).send({ message: 'The user has already existed.' });
   }
+  const sendEmail = async () => {
+    const token = getToken(existUser._id, '15m');
+    const verifyLink = `${config.BASE_URL}/verify/${token}`;
+    try {
+      const info = await transporter.sendMail({
+        from: 'Email Verification from mymo <mymo@gmail.com>',
+        to: email,
+        subject: '✔ Verification email form MyMo ',
+        html: `Hi,${name}
+            please click the link to activate your account.
+            Link:<p href=${verifyLink}>${verifyLink}<a/><br><p>This link will be expired in 15 minutes.</p>`,
+      });
+      return res.status(201).json({ message: `Verification email has been send to ${email}` });
+    } catch (e) {
+      return res.status(400).json({ message: `Fail to send verification email` });
+    }
+  };
 
+  if (existUser && existUser.isVerified === false) {
+    sendEmail();
+  }
   const user = new User({ name, email, password });
   await user.save();
-
-  const token = getToken(user._id);
-  const verifyLink = `http://localhost:8000/user/verify/${token}`;
-  const info = await transporter.sendMail({
-    from: 'Email Verification from mymo <mymo@gmail.com>',
-    to: 'chaokai.lai@gmail.com',
-    subject: 'Hello ✔',
-    html: `Hi,${user.accountName}
-            please click the link to activate your account.
-            Link:<p href=${verifyLink}>${verifyLink}<a/><br><p>This link will be expired in 1h.</p>`,
-  });
-
-  res.status(201).json({ token: getToken(user._id) });
+  sendEmail();
 });
 
 const verify = asyncHandler(async (req, res) => {
@@ -91,6 +92,45 @@ const verify = asyncHandler(async (req, res) => {
     throw new Error('Forbidden: invalid token or expired token ');
   }
   res.status(201).json({ message: 'Verification email has been sent.' });
+});
+
+const forget = asyncHandler(async (req, res) => {
+  const { email } = req.params;
+  const existUser = await User.findOne({ email });
+
+  if (!existUser) {
+    return res.status(401).send({ message: "The user doesn't exist." });
+  }
+
+  const token = getToken(existUser._id, '15m');
+  const resetLink = `${config.BASE_URL}/reset/${token}`;
+  try {
+    const info = await transporter.sendMail({
+      from: 'Reset your password <mymo@gmail.com>',
+      to: email,
+      subject: '✔ Reset your password form MyMo ',
+      html: `Hi,${existUser.name}
+            please click the link to reset your password.
+            Link:<p href=${resetLink}>${resetLink}<a/><br><p>This link will be expired in 15 minutes.</p>`,
+    });
+    return res.status(201).json({ message: `Resetting email has been send to ${email}` });
+  } catch (e) {
+    return res.status(400).json({ message: `Fail to send resetting email` });
+  }
+});
+
+const reset = asyncHandler(async (req, res) => {
+  const { token, password } = req.body;
+  try {
+    const decodedData = jwt.verify(token, config.JWT_SECRET);
+    const salt = await bcrypt.genSalt(10);
+    const encryptedPassword = await bcrypt.hash(password, salt);
+    await User.findByIdAndUpdate(decodedData.id, { $set: { password: encryptedPassword } });
+    res.status(200).json({ message: 'Reset password successfully.' });
+  } catch (error) {
+    res.status(403);
+    throw new Error('Forbidden: invalid token or expired token ');
+  }
 });
 
 const myProfile = asyncHandler(async (req, res) => {
@@ -210,5 +250,7 @@ export default {
   getAllUser,
   getByID,
   verify,
+  forget,
+  reset,
   searchUser,
 };
