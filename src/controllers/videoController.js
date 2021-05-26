@@ -12,8 +12,8 @@ const getAll = asyncHandler(async (req, res) => {
 const getById = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   const video = await Video.findById(videoId).populate({
-    path: 'author',
-    select: 'name avatar',
+    path: 'author comment.user',
+    select: 'name avatar followerNum',
   });
   res.json(video);
 });
