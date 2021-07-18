@@ -21,8 +21,19 @@ const s3Avatar = asyncHandler(async (req, res, next) => {
 
   const typeIndex = file.originalname.indexOf('.jpg');
   const name = file.originalname.substring(0, typeIndex);
-  const smallImg = await compressImage(file.buffer, 400);
+  req.name = name;
+
+  const thumbnailImg = await compressImage(file.buffer, 100);
+  const smallImg = await compressImage(file.buffer, 540);
   const largeImg = await compressImage(file.buffer, 2400);
+
+  const thumbnailParams = {
+    Bucket: AWS_BUCKET,
+    Key: `${name}-thumbnail.jpg`,
+    Body: thumbnailImg,
+    ContentType: 'image/jpeg',
+  };
+
   const smallImgParams = {
     Bucket: AWS_BUCKET,
     Key: `${name}-small.jpg`,
@@ -36,6 +47,13 @@ const s3Avatar = asyncHandler(async (req, res, next) => {
     Body: largeImg,
     ContentType: 'image/jpeg',
   };
+
+  await new Promise((resolve) => {
+    s3.upload(thumbnailParams, async (error, data) => {
+      req.thumbnailSize = data.Location;
+      resolve();
+    });
+  });
 
   await new Promise((resolve) => {
     s3.upload(smallImgParams, async (error, data) => {

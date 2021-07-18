@@ -57,10 +57,12 @@ const get = asyncHandler(async (req, res) => {
 });
 
 const create = asyncHandler(async (req, res) => {
-  const { name, category } = req.body;
+  const { category } = req.body;
+  const name = req.name;
+  const thumbnailSize = req.thumbnailSize;
   const smallSize = req.smallSize;
   const largeSize = req.largeSize;
-  const image = new Image({ name, smallSize, largeSize, category });
+  const image = new Image({ name, thumbnailSize, smallSize, largeSize, category });
   await image.save();
   res.json({ message: 'Save the image successfully.' });
 });
