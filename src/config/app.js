@@ -9,6 +9,7 @@ export default {
   AWS_VIDEO_BUCKET: process.env.AWS_VIDEO_BUCKET,
   BASE_URL: 'https://mymo.chaokai.me',
   // BASE_URL: 'http://localhost:3000',
+  AWS_CHAOKAI_IMG: process.env.AWS_CHAOKAI_IMG,
   EMAIL: process.env.EMAIL,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
   JWT_SECRET: process.env.JWT_SECRET,
