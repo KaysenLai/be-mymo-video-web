@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk';
 import config from '../config/app.js';
 import asyncHandler from 'express-async-handler';
-import compressImage from '../utils/compressImg.js';
+// import compressImage from '../utils/compressImg.js';
 
 const AWS_ID = config.AWS_ID;
 const AWS_SECRET = config.AWS_SECRET;
@@ -23,9 +23,9 @@ const s3Avatar = asyncHandler(async (req, res, next) => {
   const name = file.originalname.substring(0, typeIndex);
   req.name = name;
 
-  const thumbnailImg = await compressImage(file.buffer, 100);
-  const smallImg = await compressImage(file.buffer, 540);
-  const largeImg = await compressImage(file.buffer, 2400);
+  // const thumbnailImg = await compressImage(file.buffer, 100);
+  // const smallImg = await compressImage(file.buffer, 540);
+  // const largeImg = await compressImage(file.buffer, 2400);
 
   const thumbnailParams = {
     Bucket: AWS_BUCKET,
