@@ -43,14 +43,6 @@ const userSchema = mongoose.Schema({
       ref: 'User',
     },
   ],
-  followingNum: {
-    type: Number,
-    default: 0,
-  },
-  followerNum: {
-    type: Number,
-    default: 0,
-  },
   video: [
     {
       type: mongoose.Schema.Types.ObjectId,

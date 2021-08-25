@@ -2,14 +2,29 @@ import asyncHandler from 'express-async-handler';
 import Video from '../models/videoModel.js';
 import User from '../models/userModel.js';
 import mongoose from 'mongoose';
+import { initialPagination } from '../utils/pagination.js';
 const { ObjectId } = mongoose.Types;
 
-const getAll = asyncHandler(async (req, res) => {
-  const videos = await Video.find({}).populate({
-    path: 'author',
-    select: 'name avatar followerNum',
+const get = asyncHandler(async (req, res) => {
+  const { page, pageSize } = req.query;
+  const filter = {};
+  const populates = [
+    {
+      path: 'author',
+      select: 'name avatar followerNum',
+    },
+    {
+      path: 'comment.user',
+      select: 'name avatar followerNum',
+    },
+  ];
+  const { page: newPage, pageSize: newPageSize, skip } = initialPagination(page, pageSize);
+  const totalSize = await Video.countDocuments(filter);
+  const videos = await Video.find({}).sort({ createdAt: -1 }).skip(skip).limit(newPageSize).populate(populates);
+  res.json({
+    data: videos,
+    pagination: { page: newPage, pageSize: newPageSize, totalSize },
   });
-  res.json(videos);
 });
 
 const getById = asyncHandler(async (req, res) => {
@@ -23,7 +38,6 @@ const getById = asyncHandler(async (req, res) => {
 
 const create = asyncHandler(async (req, res) => {
   const { userId, videoUrl, coverUrl } = req;
-  console.log(userId);
   const { description } = req.body;
   const session = await Video.startSession();
   session.startTransaction();
@@ -45,7 +59,7 @@ const comment = asyncHandler(async (req, res) => {
 });
 
 export default {
-  getAll,
+  get,
   getById,
   create,
   comment,

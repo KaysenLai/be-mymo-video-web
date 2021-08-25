@@ -6,7 +6,7 @@ import s3Video from '../middlewares/s3Video.js';
 
 const router = express.Router();
 
-router.get('/', video.getAll);
+router.get('/', video.get);
 router.get('/:videoId', video.getById);
 router.post('/', auth, upload.array('video', 2), s3Video, video.create);
 router.put('/comment', auth, video.comment);

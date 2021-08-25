@@ -7,6 +7,7 @@ import transporter from '../utils/mailer.js';
 import jwt from 'jsonwebtoken';
 import config from '../config/app.js';
 import bcrypt from 'bcryptjs';
+import { myProfileAggregate } from './aggregate/user.js';
 const { ObjectId } = mongoose.Types;
 
 const login = asyncHandler(async (req, res) => {
@@ -134,11 +135,8 @@ const reset = asyncHandler(async (req, res) => {
 });
 
 const myProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.userId).populate({
-    path: 'following follower',
-    select: 'name avatar followerNum description',
-  });
-  return res.json(user);
+  const query = await User.aggregate(myProfileAggregate(req.userId));
+  return res.json(query[0]);
 });
 
 const follow = asyncHandler(async (req, res) => {
