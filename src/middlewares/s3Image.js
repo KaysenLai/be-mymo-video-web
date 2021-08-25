@@ -1,16 +1,9 @@
-import AWS from 'aws-sdk';
 import config from '../config/app.js';
 import asyncHandler from 'express-async-handler';
 // import compressImage from '../utils/compressImg.js';
 
-const AWS_ID = config.AWS_ID;
-const AWS_SECRET = config.AWS_SECRET;
 const AWS_BUCKET = config.AWS_CHAOKAI_IMG;
-
-const s3 = new AWS.S3({
-  accessKeyId: AWS_ID,
-  secretAccessKey: AWS_SECRET,
-});
+const s3 = config.s3;
 
 const s3Avatar = asyncHandler(async (req, res, next) => {
   const file = req.file;

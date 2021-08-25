@@ -1,10 +1,15 @@
 import dotenv from 'dotenv';
+import AWS from 'aws-sdk';
 dotenv.config();
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ID,
+  secretAccessKey: process.env.AWS_SECRET,
+});
 
 export default {
   PORT: process.env.PORT || 8000,
-  AWS_ID: process.env.AWS_ID,
-  AWS_SECRET: process.env.AWS_SECRET,
+  s3,
   AWS_AVATAR_BUCKET: process.env.AWS_AVATAR_BUCKET,
   AWS_VIDEO_BUCKET: process.env.AWS_VIDEO_BUCKET,
   BASE_URL: 'https://mymo.chaokai.me',
