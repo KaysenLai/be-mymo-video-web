@@ -143,39 +143,19 @@ const myProfile = asyncHandler(async (req, res) => {
 const follow = asyncHandler(async (req, res) => {
   const { followUserId } = req.body;
   const userId = req.userId;
-  const updateUser = await User.updateOne({ _id: userId }, { $addToSet: { following: new ObjectId(followUserId) } });
-
-  if (updateUser.nModified !== 0) {
-    await User.findByIdAndUpdate(userId, { $inc: { followingNum: 1 } });
-  }
-
-  const updateFollowUser = await User.updateOne(
+  await User.updateOne({ _id: userId }, { $addToSet: { following: new ObjectId(followUserId) } });
+  await User.updateOne(
     { _id: followUserId },
     { $addToSet: { follower: new ObjectId(userId) } },
   );
-
-  if (updateFollowUser.nModified !== 0) {
-    await User.findByIdAndUpdate(followUserId, { $inc: { followerNum: 1 } });
-  }
-
   return res.json({ message: 'Update following successfully.' });
 });
 
 const unfollow = asyncHandler(async (req, res) => {
   const { unFollowUserId } = req.body;
   const userId = req.userId;
-  const updateUser = await User.updateOne({ _id: userId }, { $pull: { following: new ObjectId(unFollowUserId) } });
-
-  if (updateUser.nModified !== 0) {
-    await User.findByIdAndUpdate(userId, { $inc: { followingNum: -1 } });
-  }
-
-  const updateFollowUser = await User.updateOne({ _id: unFollowUserId }, { $pull: { follower: new ObjectId(userId) } });
-
-  if (updateFollowUser.nModified !== 0) {
-    await User.findByIdAndUpdate(unFollowUserId, { $inc: { followerNum: -1 } });
-  }
-
+  await User.updateOne({ _id: userId }, { $pull: { following: new ObjectId(unFollowUserId) } });
+  await User.updateOne({ _id: unFollowUserId }, { $pull: { follower: new ObjectId(userId) } });
   return res.json({ message: 'Update unfollowing successfully.' });
 });
 
