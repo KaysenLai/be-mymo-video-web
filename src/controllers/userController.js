@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken';
 import config from '../config/app.js';
 import bcrypt from 'bcryptjs';
 import { myProfileAggregate } from './aggregate/user.js';
+import { initialPagination } from '../utils/pagination.js';
 const { ObjectId } = mongoose.Types;
 
 const login = asyncHandler(async (req, res) => {
@@ -199,10 +200,18 @@ const getAllUser = asyncHandler(async (req, res) => {
 });
 
 const searchUser = asyncHandler(async (req, res) => {
-  const searchText = req.query.searchText || '';
-  const searchTextReg = new RegExp(searchText, 'i');
-  const searchedUsers = await User.find({ name: searchTextReg }).sort({ followerNum: -1 });
-  return res.json(searchedUsers);
+  const { page, pageSize } = req.query;
+  const search = req.query.search || '';
+  const searchTextReg = new RegExp(search, 'i');
+  const filter = { name: searchTextReg };
+  const { page: newPage, pageSize: newPageSize, skip } = initialPagination(page, pageSize);
+  const totalSize = await User.countDocuments(filter);
+  const searchedUsers = await User.find(filter).skip(skip).limit(newPageSize);
+
+  return res.json({
+    data: searchedUsers,
+    pagination: { page: newPage, pageSize: newPageSize, totalSize },
+  });
 });
 
 const getByID = asyncHandler(async (req, res) => {
