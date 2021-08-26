@@ -144,10 +144,7 @@ const follow = asyncHandler(async (req, res) => {
   const { followUserId } = req.body;
   const userId = req.userId;
   await User.updateOne({ _id: userId }, { $addToSet: { following: new ObjectId(followUserId) } });
-  await User.updateOne(
-    { _id: followUserId },
-    { $addToSet: { follower: new ObjectId(userId) } },
-  );
+  await User.updateOne({ _id: followUserId }, { $addToSet: { follower: new ObjectId(userId) } });
   return res.json({ message: 'Update following successfully.' });
 });
 
