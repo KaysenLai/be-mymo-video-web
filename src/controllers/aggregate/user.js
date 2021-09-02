@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 const { ObjectId } = mongoose.Types;
-export const myProfileAggregate = (userId) => [
+
+const profileAggregate = (userId) => [
   {
     $match: {
       _id: new ObjectId(userId),
@@ -125,6 +126,13 @@ export const myProfileAggregate = (userId) => [
     },
   },
   {
+    $project: {
+      password: 0,
+    },
+  },
+];
+export const myProfileAggregate = (userId) => {
+  const addToField = {
     $addFields: {
       followerNum: {
         $size: '$follower',
@@ -133,10 +141,26 @@ export const myProfileAggregate = (userId) => [
         $size: '$following',
       },
     },
-  },
-  {
-    $project: {
-      password: 0,
+  };
+  return [...profileAggregate(userId), addToField];
+};
+
+export const idProfileAggregate = (queryId, userId) => {
+  const addToField = {
+    $addFields: {
+      followerNum: {
+        $size: '$follower',
+      },
+      followingNum: {
+        $size: '$following',
+      },
+      isFollowing: {
+        $in: [new ObjectId(userId), '$follower._id'],
+      },
+      isMyself: {
+        $eq: [new ObjectId(userId), new ObjectId(queryId)],
+      },
     },
-  },
-];
+  };
+  return [...profileAggregate(queryId), addToField];
+};

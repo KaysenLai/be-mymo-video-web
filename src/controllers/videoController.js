@@ -3,28 +3,16 @@ import Video from '../models/videoModel.js';
 import User from '../models/userModel.js';
 import mongoose from 'mongoose';
 import { initialPagination } from '../utils/pagination.js';
+import { getVideoAggregate } from './aggregate/video.js';
 const { ObjectId } = mongoose.Types;
 
 const get = asyncHandler(async (req, res) => {
   const { page, pageSize } = req.query;
   const filter = {};
-  const populates = [
-    {
-      path: 'author',
-      select: 'name avatar followerNum',
-    },
-    {
-      path: 'comment.user',
-      select: 'name avatar followerNum',
-    },
-  ];
   const { page: newPage, pageSize: newPageSize, skip } = initialPagination(page, pageSize);
-  const totalSize = await Video.countDocuments(filter);
-  const videos = await Video.find({}).sort({ createdAt: -1 }).skip(skip).limit(newPageSize).populate(populates);
-  res.json({
-    data: videos,
-    pagination: { page: newPage, pageSize: newPageSize, totalSize },
-  });
+  const aggregate = getVideoAggregate(skip, newPageSize);
+  const result = await Video.aggregate(aggregate);
+  res.json(result);
 });
 
 const getById = asyncHandler(async (req, res) => {

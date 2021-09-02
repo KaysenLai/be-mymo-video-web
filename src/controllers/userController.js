@@ -7,7 +7,7 @@ import transporter from '../utils/mailer.js';
 import jwt from 'jsonwebtoken';
 import config from '../config/app.js';
 import bcrypt from 'bcryptjs';
-import { myProfileAggregate } from './aggregate/user.js';
+import { idProfileAggregate, myProfileAggregate } from './aggregate/user.js';
 import { initialPagination } from '../utils/pagination.js';
 const { ObjectId } = mongoose.Types;
 
@@ -194,33 +194,9 @@ const searchUser = asyncHandler(async (req, res) => {
 const getByID = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   const reqUserId = req.headers['x-userid'];
+  const query = await User.aggregate(idProfileAggregate(userId, reqUserId));
 
-  const user = await User.findById(userId).populate({
-    path: 'following follower',
-    select: 'name avatar followerNum description',
-  });
-  const query = await User.aggregate([
-    {
-      $match: {
-        _id: new ObjectId(userId),
-      },
-    },
-    {
-      $project: {
-        isFollowing: {
-          $in: [new ObjectId(reqUserId), '$follower'],
-        },
-        isMyself: {
-          $eq: [new ObjectId(reqUserId), new ObjectId(userId)],
-        },
-      },
-    },
-  ]);
-  const { isFollowing, isMyself } = query[0];
-  let userObj = user.toObject();
-  userObj.isFollowing = isFollowing;
-  userObj.isMyself = isMyself;
-  return res.json(userObj);
+  return res.json(query[0]);
 });
 
 export default {
